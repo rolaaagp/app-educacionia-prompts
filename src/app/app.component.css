@@ -1,0 +1,26 @@
+.options-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.option-item {
+  display: flex;
+  align-items: baseline; /* << clave para alinear con fracciones */
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.option-label {
+  font-weight: bold;
+  line-height: 1;
+  margin-right: 4px;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.option-content .katex {
+  display: inline;
+  vertical-align: middle; /* << fuerza alineación */
+  font-size: 1rem;
+}
