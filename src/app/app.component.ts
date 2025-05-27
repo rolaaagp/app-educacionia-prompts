@@ -70,7 +70,6 @@ export class AppComponent implements OnInit {
           this.user = res.data;
           this.formData.user_id = res.data.user_id;
           localStorage.setItem("userEDUCACIONIA", JSON.stringify(res.data));
-
           if (!this.isLoggedInWS) {
             this.isLoggedInWS = await this.socketService.startWSConnection();
 

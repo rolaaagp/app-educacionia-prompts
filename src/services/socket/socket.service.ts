@@ -52,7 +52,6 @@ export class SocketService {
 
   async startWSConnection() {
     const user = JSON.parse(localStorage.getItem("userEDUCACIONIA") as string) as GetUserByEmailResponse["data"];
-
     const minutos = 5;
 
     if (this.intervalId) {
@@ -75,6 +74,7 @@ export class SocketService {
     const data = {
       type: 'onKnow',
       userId,
+      roomId: 1,
       isLoggedin: this.isLoggedInWS,
     };
     const payload = { action: 'onKnow', message: JSON.stringify(data) };
