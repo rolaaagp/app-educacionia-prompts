@@ -1,18 +1,45 @@
-<div *ngFor="let e of ejercicios; let i = index" class="mb-4">
-  <div>
+<h2>Matemáticas</h2>
+
+<span *ngIf="!exercises">No hay ejercicios aún.</span>
+
+<div
+  *ngFor="let e of exercises; let i = index"
+  class="mb-4 p-3 border rounded bg-light"
+>
+  <div class="mb-2">
     <strong>{{ i + 1 }}.</strong>
     <span [innerHTML]="formatLatex(e.question)"></span>
   </div>
-<br>
-  <ul *ngIf="e.options" class="options-list">
-    <li *ngFor="let opt of e.options; let j = index" class="option-item">
-      <span class="option-label">{{ getOptionLetter(j) }}.</span>
-      <span class="option-content" [innerHTML]="formatLatex(opt)"></span>
+
+  <ul *ngIf="e.options" class="list-unstyled">
+    <li *ngFor="let opt of e.options; let j = index" class="mb-2">
+      <label class="d-flex align-items-start gap-2">
+        <input
+          type="radio"
+          [name]="'question_' + i"
+          [value]="j"
+          [(ngModel)]="userResponses[i]"
+          class="form-check-input mt-1"
+        />
+        <span>
+          <strong>{{ getOptionLetter(j) }}.</strong>
+          <span [innerHTML]="formatLatex(opt)"></span>
+        </span>
+      </label>
     </li>
   </ul>
-  <div *ngIf="e.type === 'open_ended'" class="mt-2 text-muted">
-    <strong>Respuesta esperada:</strong>
-    <span [innerHTML]="formatLatex(e.answer)"></span>
+
+  <div *ngIf="e.type === 'open_ended'" class="mt-2">
+    <textarea
+      rows="4"
+      class="form-control"
+      [(ngModel)]="userResponses[i]"
+      placeholder="Escribe tu respuesta"
+    ></textarea>
   </div>
-  <br>
+
+  <!-- Botón por pregunta -->
+  <button class="btn btn-sm btn-success mt-2" (click)="enviarRespuesta(i)">
+    Enviar respuesta
+  </button>
 </div>

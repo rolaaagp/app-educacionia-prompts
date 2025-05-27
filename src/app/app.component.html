@@ -1,6 +1,47 @@
-<button (click)="language = false">Matemática</button>
-<button (click)="language = true">Language</button>
+<input type="text" name="email" [(ngModel)]="email" placeholder="Correo" />
+<button (click)="save()">guardar</button>
 
+<br /><br /><br />
+<form #form="ngForm">
+  <label for="course">Curso</label><br />
+  <select id="course" name="course" [(ngModel)]="formData.course" required>
+    <option value="1M">1M</option>
+    <option value="2M">2M</option>
+    <option value="3M">3M</option>
+    <option value="4M">4M</option></select
+  ><br /><br />
 
-<app-language *ngIf="language"></app-language>
-<app-math *ngIf="!language"></app-math>
+  <label for="subject">Asignatura</label><br />
+  <select id="subject" name="subject" [(ngModel)]="formData.subject" required>
+    <option value="LANG">Lenguaje</option>
+    <option value="MATH">Matemática</option></select
+  ><br /><br />
+
+  <label for="contents">Contenidos que debe utilizar</label><br />
+  <textarea
+    id="contents"
+    name="contents"
+    cols="30"
+    rows="10"
+    [(ngModel)]="formData.contents"
+    required
+  ></textarea
+  ><br /><br />
+
+  <label for="quantity">Cantidad de ejercicios</label><br />
+  <input
+    type="number"
+    id="quantity"
+    name="quantity_exercise"
+    [(ngModel)]="formData.quantity_exercise"
+    required
+  /><br /><br />
+
+  <button type="button" (click)="solicitar()">Solicitar</button>
+</form>
+
+<br />
+<br />
+
+<app-language [exercises]="excLANG" ></app-language>
+<app-math  [exercises]="excMATH" ></app-math>

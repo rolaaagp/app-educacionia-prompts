@@ -1,4 +1,8 @@
-<div *ngFor="let e of ejercicios; let i = index" class="mb-4">
+<h2>Lenguaje</h2>
+
+<span *ngIf="!exercises">No hay ejercicios aún.</span>
+
+<div *ngFor="let e of exercises; let i = index" class="mb-4">
   <div class="question">
     <strong>{{ i + 1 }}.</strong>
     <span>{{ e.question }}</span>

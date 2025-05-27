@@ -1,0 +1,13 @@
+textarea, input[type="radio"] {
+  margin-right: 8px;
+}
+
+textarea {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+}
+
+li {
+  list-style: none;
+}
