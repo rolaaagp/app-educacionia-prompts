@@ -1,7 +1,10 @@
-<div class="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl space-y-8 border border-blue-100">
-
+<div
+  class="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl space-y-8 border border-blue-100"
+>
   <div class="space-y-2">
-    <label for="email" class="block text-sm font-semibold text-blue-700">Correo</label>
+    <label for="email" class="block text-sm font-semibold text-blue-700"
+      >Correo</label
+    >
     <input
       id="email"
       type="text"
@@ -18,9 +21,10 @@
   </div>
 
   <form #form="ngForm" class="space-y-5">
-
     <div>
-      <label for="course" class="block text-sm font-semibold text-blue-700">Curso</label>
+      <label for="course" class="block text-sm font-semibold text-blue-700"
+        >Curso</label
+      >
       <select
         id="course"
         name="course"
@@ -36,7 +40,9 @@
     </div>
 
     <div>
-      <label for="subject" class="block text-sm font-semibold text-blue-700">Asignatura</label>
+      <label for="subject" class="block text-sm font-semibold text-blue-700"
+        >Asignatura</label
+      >
       <select
         id="subject"
         name="subject"
@@ -50,7 +56,9 @@
     </div>
 
     <div>
-      <label for="contents" class="block text-sm font-semibold text-blue-700">Contenidos</label>
+      <label for="contents" class="block text-sm font-semibold text-blue-700"
+        >Contenidos</label
+      >
       <textarea
         id="contents"
         name="contents"
@@ -63,7 +71,9 @@
     </div>
 
     <div>
-      <label for="quantity" class="block text-sm font-semibold text-blue-700">Cantidad de ejercicios</label>
+      <label for="quantity" class="block text-sm font-semibold text-blue-700"
+        >Cantidad de ejercicios</label
+      >
       <input
         type="number"
         id="quantity"
@@ -84,10 +94,21 @@
       >
         Solicitar
       </button>
-      <span *ngIf="loading" class="text-sm text-red-500 font-medium">Cargando...</span>
+      <span *ngIf="loading" class="text-sm text-red-500 font-medium"
+        >Cargando...</span
+      >
     </div>
   </form>
 
-  <app-language [exercises]="excLANG"></app-language>
-  <app-math [exercises]="excMATH"></app-math>
+  <ng-container *ngIf="loading; else content">
+    <app-skeleton></app-skeleton>
+    <app-skeleton></app-skeleton>
+  </ng-container>
+
+  <ng-template #content>
+    <app-language [exercises]="excLANG"></app-language>
+    <app-math [exercises]="excMATH"></app-math>
+  </ng-template>
+
+  <!-- <span> {{t}}</span> -->
 </div>

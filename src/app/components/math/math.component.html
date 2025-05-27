@@ -17,19 +17,20 @@
   </button>
 
   <div *ngIf="mostrarMatematicas" class="mt-4 space-y-6">
-    <span *ngIf="!exercises" class="text-gray-500">No hay ejercicios aún.</span>
+    <span *ngIf="!exercises" class="text-gray-500" [@fadeIn]>No hay ejercicios aún.</span>
 
     <div
       *ngFor="let e of exercises; let i = index"
+      [@fadeIn]
       class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm space-y-4"
     >
-      <div class="text-gray-800">
+      <div class="text-gray-800" [@fadeIn]>
         <strong>{{ i + 1 }}.</strong>
         <span [innerHTML]="formatLatex(e.question)"></span>
       </div>
 
-      <ul *ngIf="e.options" class="space-y-2">
-        <li *ngFor="let opt of e.options; let j = index">
+      <ul *ngIf="e.options" class="space-y-2" [@fadeIn]>
+        <li *ngFor="let opt of e.options; let j = index" [@fadeIn]>
           <label class="flex items-start gap-2 cursor-pointer">
             <input
               type="radio"
@@ -46,7 +47,7 @@
         </li>
       </ul>
 
-      <div *ngIf="e.type === 'open_ended'">
+      <div *ngIf="e.type === 'open_ended'" [@fadeIn]>
         <textarea
           rows="4"
           [(ngModel)]="userResponses[i]"
@@ -55,7 +56,7 @@
         ></textarea>
       </div>
 
-      <div class="pt-2">
+      <div class="pt-2" [@fadeIn]>
         <button
           class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
           (click)="enviarRespuesta(i)"

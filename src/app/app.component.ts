@@ -7,6 +7,7 @@ import { LanguageComponent } from "./components/language/language.component";
 import { MathComponent } from "./components/math/math.component";
 import { CommonModule } from '@angular/common';
 import { IBody, MainService } from '../services/main.services';
+import { SkeletonComponent } from "./components/skeleton/skeleton.component";
 
 
 export type Exercise = {
@@ -20,7 +21,7 @@ export type Exercise = {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, LanguageComponent, MathComponent],
+  imports: [CommonModule, FormsModule, HttpClientModule, LanguageComponent, MathComponent, SkeletonComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -41,6 +42,8 @@ export class AppComponent implements OnInit {
 
   excLANG!: Exercise[];
   excMATH!: Exercise[];
+
+  t: string = "";
 
   loading = false;
 
@@ -78,7 +81,11 @@ export class AppComponent implements OnInit {
               const message = JSON.parse(data.data);
               if (message.online) this.isLoggedInWS = true;
               if (message.action && this.isLoggedInWS) {
-                
+                // switch(message.action){
+                //   case "resultRequestAgent": {
+                //     this.t += message.chunkText
+                //   }
+                // }
               }
             });
           }

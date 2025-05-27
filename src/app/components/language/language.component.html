@@ -17,28 +17,30 @@
   </button>
 
   <div *ngIf="mostrarLenguaje" class="mt-4 space-y-6">
-    <span *ngIf="!exercises" class="text-gray-500">No hay ejercicios aún.</span>
+    <span *ngIf="!exercises" class="text-gray-500" [@fadeIn]>No hay ejercicios aún.</span>
 
     <div
       *ngFor="let e of exercises; let i = index"
+      [@fadeIn]
       class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm space-y-4"
     >
-      <div class="text-gray-800">
+      <div class="text-gray-800" [@fadeIn]>
         <strong>{{ i + 1 }}.</strong>
         <span>{{ e.question }}</span>
       </div>
 
-      <ul *ngIf="e.options" class="space-y-2">
+      <ul *ngIf="e.options" class="space-y-2" [@fadeIn]>
         <li
           *ngFor="let opt of e.options; let j = index"
           class="flex items-start gap-2 text-gray-700"
+          [@fadeIn]
         >
           <span class="font-semibold">{{ getOptionLetter(j) }}.</span>
           <span>{{ opt }}</span>
         </li>
       </ul>
 
-      <div *ngIf="e.type === 'open_ended'" class="text-gray-600">
+      <div *ngIf="e.type === 'open_ended'" class="text-gray-600" [@fadeIn]>
         <strong>Respuesta sugerida:</strong>
         <p class="mt-1 italic">{{ e.answer }}</p>
       </div>
