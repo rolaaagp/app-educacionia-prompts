@@ -37,7 +37,9 @@
     required
   /><br /><br />
 
-  <button type="button" (click)="solicitar()">Solicitar</button>
+  <button type="button" (click)="solicitar()">Solicitar</button> 
+  <br>
+  <span *ngIf="loading" style="color: red;"> Cargando... </span>
 </form>
 
 <br />

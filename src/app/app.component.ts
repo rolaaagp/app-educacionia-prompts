@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
   excLANG!: Exercise[];
   excMATH!: Exercise[];
 
+  loading = false;
+
   constructor(
     private readonly _userService: UserService,
     private readonly socketService: SocketService,
@@ -57,6 +59,7 @@ export class AppComponent implements OnInit {
     })
   }
   solicitar(retryCount: number = 0) {
+    this.loading = true;
     this.mainService.generateExercises(this.formData).subscribe({
       next: (res) => {
         const text = res.data?.toString() || '';
@@ -78,6 +81,9 @@ export class AppComponent implements OnInit {
       },
       error: (err) => {
         console.error("Error al solicitar ejercicios:", err);
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }
