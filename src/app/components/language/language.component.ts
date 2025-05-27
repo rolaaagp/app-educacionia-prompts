@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import katex from 'katex';
 import { Exercise } from '../../app.component';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-language',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   animations: [
     trigger('fadeIn', [
       transition(':enter', [
@@ -26,4 +26,15 @@ export class LanguageComponent {
   getOptionLetter(index: number): string {
     return String.fromCharCode(65 + index); // 65 = 'A'
   }
+
+  userResponses: (string | number)[] = [];
+
+  enviarRespuesta(index: number) {
+    const ejercicio = this.exercises[index];
+    const respuesta = this.userResponses[index];
+
+    console.log('Ejercicio enviado:', ejercicio);
+    console.log('Respuesta del usuario:', respuesta);
+  }
+
 }
