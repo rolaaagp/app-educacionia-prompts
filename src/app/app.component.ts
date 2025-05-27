@@ -26,7 +26,7 @@ export type Exercise = {
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  email: string = '';
+  email: string = 'rgarcia@nexia.cl';
   isLoggedInWS: boolean = false;
   user!: GetUserByEmailResponse["data"];
 
