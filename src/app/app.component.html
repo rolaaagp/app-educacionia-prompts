@@ -1,49 +1,93 @@
-<input type="text" name="email" [(ngModel)]="email" placeholder="Correo" />
-<button (click)="save()">guardar</button>
+<div class="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl space-y-8 border border-blue-100">
 
-<br /><br /><br />
-<form #form="ngForm">
-  <label for="course">Curso</label><br />
-  <select id="course" name="course" [(ngModel)]="formData.course" required>
-    <option value="1M">1M</option>
-    <option value="2M">2M</option>
-    <option value="3M">3M</option>
-    <option value="4M">4M</option></select
-  ><br /><br />
+  <div class="space-y-2">
+    <label for="email" class="block text-sm font-semibold text-blue-700">Correo</label>
+    <input
+      id="email"
+      type="text"
+      [(ngModel)]="email"
+      placeholder="ejemplo@correo.cl"
+      class="w-full border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm"
+    />
+    <button
+      (click)="save()"
+      class="mt-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium"
+    >
+      Guardar
+    </button>
+  </div>
 
-  <label for="subject">Asignatura</label><br />
-  <select id="subject" name="subject" [(ngModel)]="formData.subject" required>
-    <option value="LANG">Lenguaje</option>
-    <option value="MATH">Matemática</option></select
-  ><br /><br />
+  <form #form="ngForm" class="space-y-5">
 
-  <label for="contents">Contenidos que debe utilizar</label><br />
-  <textarea
-    id="contents"
-    name="contents"
-    cols="30"
-    rows="10"
-    [(ngModel)]="formData.contents"
-    required
-  ></textarea
-  ><br /><br />
+    <div>
+      <label for="course" class="block text-sm font-semibold text-blue-700">Curso</label>
+      <select
+        id="course"
+        name="course"
+        [(ngModel)]="formData.course"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+      >
+        <option value="1M">1M</option>
+        <option value="2M">2M</option>
+        <option value="3M">3M</option>
+        <option value="4M">4M</option>
+      </select>
+    </div>
 
-  <label for="quantity">Cantidad de ejercicios</label><br />
-  <input
-    type="number"
-    id="quantity"
-    name="quantity_exercise"
-    [(ngModel)]="formData.quantity_exercise"
-    required
-  /><br /><br />
+    <div>
+      <label for="subject" class="block text-sm font-semibold text-blue-700">Asignatura</label>
+      <select
+        id="subject"
+        name="subject"
+        [(ngModel)]="formData.subject"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+      >
+        <option value="LANG">Lenguaje</option>
+        <option value="MATH">Matemática</option>
+      </select>
+    </div>
 
-  <button type="button" (click)="solicitar()">Solicitar</button> 
-  <br>
-  <span *ngIf="loading" style="color: red;"> Cargando... </span>
-</form>
+    <div>
+      <label for="contents" class="block text-sm font-semibold text-blue-700">Contenidos</label>
+      <textarea
+        id="contents"
+        name="contents"
+        rows="4"
+        [(ngModel)]="formData.contents"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm"
+        placeholder="Ej: ecuaciones, funciones, proporcionalidad, etc."
+      ></textarea>
+    </div>
 
-<br />
-<br />
+    <div>
+      <label for="quantity" class="block text-sm font-semibold text-blue-700">Cantidad de ejercicios</label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity_exercise"
+        min="1"
+        max="50"
+        [(ngModel)]="formData.quantity_exercise"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm"
+      />
+    </div>
 
-<app-language [exercises]="excLANG" ></app-language>
-<app-math  [exercises]="excMATH" ></app-math>
+    <div class="flex items-center gap-4">
+      <button
+        type="button"
+        (click)="solicitar()"
+        class="px-6 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+      >
+        Solicitar
+      </button>
+      <span *ngIf="loading" class="text-sm text-red-500 font-medium">Cargando...</span>
+    </div>
+  </form>
+
+  <app-language [exercises]="excLANG"></app-language>
+  <app-math [exercises]="excMATH"></app-math>
+</div>

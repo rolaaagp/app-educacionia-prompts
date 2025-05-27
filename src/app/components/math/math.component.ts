@@ -15,6 +15,7 @@ export class MathComponent {
   @Input() exercises!: Exercise[];
 
   userResponses: (string | number)[] = [];
+  mostrarMatematicas = false;
 
   enviarRespuesta(index: number) {
     const ejercicio = this.exercises[index];

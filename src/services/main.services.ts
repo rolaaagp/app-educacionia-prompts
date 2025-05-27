@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface IBody {
+  user_id: number;
   course: '1M' | '2M' | '3M' | '4M';
   subject: 'LANG' | 'MATH';
   contents: string;

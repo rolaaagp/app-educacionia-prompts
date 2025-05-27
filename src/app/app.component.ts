@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
   language: boolean = false;
 
   formData: IBody = {
+    user_id: 0,
     course: '2M',
     subject: 'MATH',
     contents: 'funciones, ecuaciones, proporcionalidad, geometría o probabilidades',
@@ -49,15 +50,44 @@ export class AppComponent implements OnInit {
     private readonly mainService: MainService
   ) { }
 
+  async ngOnInit() {
+    this.socketService.connectadConfirmed$.subscribe((estado) => {
+      console.log("WebSocket:", estado); // o usa un toast, alert, etc.
+    });
+
+    const user = JSON.parse(localStorage.getItem("userEDUCACIONIA") as string) as GetUserByEmailResponse["data"];
+    if (user) {
+      this.user = user;
+      this.formData.user_id = user.user_id;
+      this.isLoggedInWS = await this.socketService.startWSConnection();
+    }
+  }
+
   save() {
     this._userService.getByEmail(this.email).subscribe({
-      next: (res) => {
+      next: async (res) => {
         if (res.data) {
+          this.user = res.data;
+          this.formData.user_id = res.data.user_id;
           localStorage.setItem("userEDUCACIONIA", JSON.stringify(res.data));
+
+          if (!this.isLoggedInWS) {
+            this.isLoggedInWS = await this.socketService.startWSConnection();
+
+            this._userService.message.subscribe((data: any) => {
+              console.log("datasocket", data);
+              const message = JSON.parse(data.data);
+              if (message.online) this.isLoggedInWS = true;
+              if (message.action && this.isLoggedInWS) {
+                
+              }
+            });
+          }
         }
       }
-    })
+    });
   }
+
   solicitar(retryCount: number = 0) {
     this.loading = true;
     this.mainService.generateExercises(this.formData).subscribe({
@@ -102,27 +132,6 @@ export class AppComponent implements OnInit {
   }
 
 
-  async ngOnInit() {
-    const user = JSON.parse(localStorage.getItem("userEDUCACIONIA") as string) as GetUserByEmailResponse["data"];
-
-    if (!user && this.email) {
-      this.save();
-    }
-    if (user) {
-      this.isLoggedInWS = await this.socketService.startWSConnection();
 
 
-      this._userService.message.subscribe((data: any) => {
-        const message = JSON.parse(data.data);
-
-        if (message.online) {
-          this.isLoggedInWS = true;
-        }
-
-        if (message.action && this.isLoggedInWS) {
-          console.log("message.action", message.action);
-        }
-      });
-    }
-  }
 }

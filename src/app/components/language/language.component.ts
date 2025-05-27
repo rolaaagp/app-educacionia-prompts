@@ -11,8 +11,9 @@ import { Exercise } from '../../app.component';
 })
 export class LanguageComponent {
 
-  @Input() exercises!: Exercise[]; 
-  
+  @Input() exercises!: Exercise[];
+  mostrarLenguaje = false;
+
   getOptionLetter(index: number): string {
     return String.fromCharCode(65 + index); // 65 = 'A'
   }

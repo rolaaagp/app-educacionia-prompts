@@ -1,23 +1,47 @@
-<h2>Lenguaje</h2>
+<div class="mb-6">
+  <button
+    (click)="mostrarLenguaje = !mostrarLenguaje"
+    class="w-full flex justify-between items-center px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+  >
+    <span class="text-lg font-semibold">Lenguaje</span>
+    <svg
+      [ngClass]="{ 'rotate-180': mostrarLenguaje }"
+      class="w-5 h-5 transition-transform"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
 
-<span *ngIf="!exercises">No hay ejercicios aún.</span>
+  <div *ngIf="mostrarLenguaje" class="mt-4 space-y-6">
+    <span *ngIf="!exercises" class="text-gray-500">No hay ejercicios aún.</span>
 
-<div *ngFor="let e of exercises; let i = index" class="mb-4">
-  <div class="question">
-    <strong>{{ i + 1 }}.</strong>
-    <span>{{ e.question }}</span>
+    <div
+      *ngFor="let e of exercises; let i = index"
+      class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm space-y-4"
+    >
+      <div class="text-gray-800">
+        <strong>{{ i + 1 }}.</strong>
+        <span>{{ e.question }}</span>
+      </div>
+
+      <ul *ngIf="e.options" class="space-y-2">
+        <li
+          *ngFor="let opt of e.options; let j = index"
+          class="flex items-start gap-2 text-gray-700"
+        >
+          <span class="font-semibold">{{ getOptionLetter(j) }}.</span>
+          <span>{{ opt }}</span>
+        </li>
+      </ul>
+
+      <div *ngIf="e.type === 'open_ended'" class="text-gray-600">
+        <strong>Respuesta sugerida:</strong>
+        <p class="mt-1 italic">{{ e.answer }}</p>
+      </div>
+    </div>
   </div>
-<br>
-  <ul *ngIf="e.options" class="options-list">
-    <li *ngFor="let opt of e.options; let j = index" class="option-item">
-      <span class="option-label">{{ getOptionLetter(j) }}.</span>
-      <span class="option-content">{{ opt }}</span>
-    </li>
-  </ul>
-
-  <div *ngIf="e.type === 'open_ended'" class="mt-2 text-muted">
-    <strong>Respuesta sugerida:</strong>
-    <p class="open-response">{{ e.answer }}</p>
-  </div>
-  <br>
 </div>
