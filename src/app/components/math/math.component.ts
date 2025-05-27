@@ -20,20 +20,25 @@ import { trigger, transition, style, animate } from '@angular/animations';
   styleUrl: './math.component.css'
 })
 export class MathComponent {
-
   @Input() exercises!: Exercise[];
 
   userResponses: (string | number)[] = [];
+  respuestasCorrectas: (boolean | null)[] = [];
   mostrarMatematicas = false;
 
   enviarRespuesta(index: number) {
     const ejercicio = this.exercises[index];
     const respuesta = this.userResponses[index];
+    const correcta = ejercicio.answer;
 
-    console.log('Ejercicio enviado:', ejercicio);
-    console.log('Respuesta del usuario:', respuesta);
+    const esCorrecta =
+      ejercicio.type === 'multiple_choice'
+        ? Number(respuesta) === Number(correcta)
+        : (respuesta ?? '').toString().trim().toLowerCase() === (correcta ?? '').toString().trim().toLowerCase();
 
-    // Aquí puedes hacer POST a tu API si es necesario
+    this.respuestasCorrectas[index] = esCorrecta;
+
+    console.log('Respuesta enviada:', { respuesta, correcta, esCorrecta });
   }
 
   formatLatex(input: string): string {
@@ -45,12 +50,11 @@ export class MathComponent {
     });
   }
 
-
   isPureLatex(value: string): boolean {
     return /^\\\(.+\\\)$/.test(value.trim());
   }
 
   getOptionLetter(index: number): string {
-    return String.fromCharCode(65 + index); // 65 = 'A'
+    return String.fromCharCode(65 + index);
   }
 }

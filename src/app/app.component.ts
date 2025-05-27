@@ -106,7 +106,8 @@ export class AppComponent implements OnInit {
           this.solicitar(retryCount + 1);
           return;
         }
-        const arr = this.extractExercisesFromText(text);
+
+        const arr = this.extractExercisesFromText(text).slice(0, this.formData.quantity_exercise);
         console.log(arr);
 
         if (this.formData.subject === "LANG") {
@@ -123,6 +124,7 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
 
 
   extractExercisesFromText(text: string): Exercise[] {

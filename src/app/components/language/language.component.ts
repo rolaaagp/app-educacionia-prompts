@@ -19,22 +19,28 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './language.component.css'
 })
 export class LanguageComponent {
-
   @Input() exercises!: Exercise[];
   mostrarLenguaje = false;
 
-  getOptionLetter(index: number): string {
-    return String.fromCharCode(65 + index); // 65 = 'A'
-  }
-
   userResponses: (string | number)[] = [];
+  respuestasCorrectas: (boolean | null)[] = [];
+
+  getOptionLetter(index: number): string {
+    return String.fromCharCode(65 + index);
+  }
 
   enviarRespuesta(index: number) {
     const ejercicio = this.exercises[index];
     const respuesta = this.userResponses[index];
+    const correcta = ejercicio.answer;
 
-    console.log('Ejercicio enviado:', ejercicio);
-    console.log('Respuesta del usuario:', respuesta);
+    const esCorrecta =
+      ejercicio.type === 'multiple_choice'
+        ? Number(respuesta) === Number(correcta)
+        : (respuesta ?? '').toString().trim().toLowerCase() === (correcta ?? '').toString().trim().toLowerCase();
+
+    this.respuestasCorrectas[index] = esCorrecta;
+
+    console.log('Respuesta enviada:', { respuesta, correcta, esCorrecta });
   }
-
 }
