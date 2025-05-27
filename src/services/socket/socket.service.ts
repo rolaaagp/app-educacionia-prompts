@@ -60,7 +60,7 @@ export class SocketService {
     }
 
     this.intervalId = setInterval(() => {
-      this.getWebsocketID(user!.user_id);
+      this.getWebsocketID(user?.user_id as number);
       if (this.intervalId) {
         this.startWSConnection();
       }

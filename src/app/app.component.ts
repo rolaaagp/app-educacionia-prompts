@@ -108,19 +108,21 @@ export class AppComponent implements OnInit {
     if (!user && this.email) {
       this.save();
     }
+    if (user) {
+      this.isLoggedInWS = await this.socketService.startWSConnection();
 
-    this.isLoggedInWS = await this.socketService.startWSConnection();
 
-    this._userService.message.subscribe((data: any) => {
-      const message = JSON.parse(data.data);
+      this._userService.message.subscribe((data: any) => {
+        const message = JSON.parse(data.data);
 
-      if (message.online) {
-        this.isLoggedInWS = true;
-      }
+        if (message.online) {
+          this.isLoggedInWS = true;
+        }
 
-      if (message.action && this.isLoggedInWS) {
-        console.log("message.action", message.action);
-      }
-    });
+        if (message.action && this.isLoggedInWS) {
+          console.log("message.action", message.action);
+        }
+      });
+    }
   }
 }
