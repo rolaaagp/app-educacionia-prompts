@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
     subject: 'MATH',
     contents: 'funciones, ecuaciones, proporcionalidad, geometría o probabilidades',
     quantity_exercise: 1,
+    typeQuestions: "mix"
   };
 
   excLANG!: Exercise[];
@@ -96,24 +97,35 @@ export class AppComponent implements OnInit {
 
   solicitar(retryCount: number = 0) {
     this.loading = true;
+
     this.mainService.generateExercises(this.formData).subscribe({
       next: (res) => {
-        const text = res.data?.toString() || '';
+        const rawData = res.data;
+        const isArray = Array.isArray(rawData);
 
-        const lower = text.toLowerCase();
-        if ((lower.startsWith("sorry") || lower.startsWith("lo siento")) && retryCount < 3) {
-          console.warn("Respuesta del agente indica fallo, reintentando...");
-          this.solicitar(retryCount + 1);
-          return;
+        if (!isArray && retryCount < 3) {
+          const text = rawData?.toString().toLowerCase() || '';
+          if (text.startsWith("sorry") || text.startsWith("lo siento")) {
+            console.warn("Respuesta del agente indica fallo, reintentando...");
+            this.solicitar(retryCount + 1);
+            return;
+          }
         }
 
-        const arr = this.extractExercisesFromText(text).slice(0, this.formData.quantity_exercise);
-        console.log(arr);
+        const parsed = isArray ? rawData : this.extractExercisesFromText(rawData?.toString() || '');
+        const limited = parsed.slice(0, this.formData.quantity_exercise);
+
+        if (!isArray) {
+          for (const x of limited) {
+            x.options = x.options ? x.options.map((opt: string) => opt.replace(/text/g, '')) : null;
+            x.question = x.question.replace(/text/g, '');
+          }
+        }
 
         if (this.formData.subject === "LANG") {
-          this.excLANG = arr;
+          this.excLANG = limited;
         } else {
-          this.excMATH = arr;
+          this.excMATH = limited;
         }
       },
       error: (err) => {

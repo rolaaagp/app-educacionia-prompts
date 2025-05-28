@@ -43,6 +43,8 @@
               [name]="'question_' + i"
               [value]="j"
               [(ngModel)]="userResponses[i]"
+              [disabled]="preguntaRespondida[i]"
+              (ngModelChange)="viewAnswer(i)"
               class="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
             />
             <span>
@@ -56,20 +58,22 @@
       <div *ngIf="e.type === 'open_ended'" class="text-gray-600" [@fadeIn]>
         <textarea
           rows="3"
+          [disabled]="preguntaRespondida[i]"
           [(ngModel)]="userResponses[i]"
           placeholder="Escribe tu respuesta"
           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
         ></textarea>
       </div>
 
-      <div class="pt-2">
+      <div *ngIf="e.type === 'open_ended'" class="pt-2">
         <button
           class="cursor-pointer px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          (click)="enviarRespuesta(i)"
+          (click)="viewAnswer(i)"
         >
           Enviar respuesta
         </button>
       </div>
+
       <div *ngIf="respuestasCorrectas[i] !== undefined">
         <p
           class="mt-2 font-semibold"
@@ -85,6 +89,14 @@
           }}
         </p>
       </div>
+
+      <ng-container *ngIf="loading[i]; else content">
+        <app-skeleton></app-skeleton>
+        <app-skeleton></app-skeleton>
+      </ng-container>
+      <ng-template #content>
+        <p [innerHTML]="IAresponse[i]"></p>
+      </ng-template>
     </div>
   </div>
 </div>

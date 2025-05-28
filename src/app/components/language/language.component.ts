@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Exercise } from '../../app.component';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FormsModule } from '@angular/forms';
+import { MainService } from '../../../services/main.services';
+import { SkeletonComponent } from "../skeleton/skeleton.component";
 
 @Component({
   selector: 'app-language',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkeletonComponent],
   animations: [
     trigger('fadeIn', [
       transition(':enter', [
@@ -20,7 +22,15 @@ import { FormsModule } from '@angular/forms';
 })
 export class LanguageComponent {
   @Input() exercises!: Exercise[];
+  @Input() course!: '1M' | '2M' | '3M' | '4M';
+  @Input() subject!: 'LANG' | 'MATH';
+
+  mainService = inject(MainService);
   mostrarLenguaje = false;
+
+  IAresponse: string[] = [];
+  preguntaRespondida: boolean[] = [];
+  loading: boolean[] = [];
 
   userResponses: (string | number)[] = [];
   respuestasCorrectas: (boolean | null)[] = [];
@@ -29,18 +39,37 @@ export class LanguageComponent {
     return String.fromCharCode(65 + index);
   }
 
-  enviarRespuesta(index: number) {
-    const ejercicio = this.exercises[index];
-    const respuesta = this.userResponses[index];
-    const correcta = ejercicio.answer;
+  viewAnswer(index: number) {
+    this.loading[index] = true;
+    const exercise = this.exercises[index];
+    const response = this.userResponses[index];
+    const correct = exercise.answer;
 
-    const esCorrecta =
-      ejercicio.type === 'multiple_choice'
-        ? Number(respuesta) === Number(correcta)
-        : (respuesta ?? '').toString().trim().toLowerCase() === (correcta ?? '').toString().trim().toLowerCase();
+    const isCorrect =
+      exercise.type === 'multiple_choice'
+        ? Number(response) === Number(correct)
+        : (response ?? '').toString().trim().toLowerCase() === (correct ?? '').toString().trim().toLowerCase();
 
-    this.respuestasCorrectas[index] = esCorrecta;
+    this.respuestasCorrectas[index] = isCorrect;
+    this.preguntaRespondida[index] = true;
 
-    console.log('Respuesta enviada:', { respuesta, correcta, esCorrecta });
+    this.verify(exercise, index);
   }
+
+
+  verify(exercise: Exercise, index: number) {
+    this.mainService.verifyExercise({
+      course: this.course,
+      subject: this.subject,
+      exercise: exercise,
+    }).subscribe({
+      next: (res) => {
+        this.IAresponse[index] = res.data.replace(/\n/g, '<br>');
+      },
+      complete: () => {
+        this.loading[index] = false;
+      }
+    });
+  }
+
 }
