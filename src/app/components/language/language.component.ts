@@ -40,7 +40,7 @@ export class LanguageComponent {
   }
 
   viewAnswer(index: number) {
-    this.loading[index] = true;
+    
     const exercise = this.exercises[index];
     const response = this.userResponses[index];
     const correct = exercise.answer;
@@ -52,16 +52,23 @@ export class LanguageComponent {
 
     this.respuestasCorrectas[index] = isCorrect;
     this.preguntaRespondida[index] = true;
-
-    this.verify(exercise, index);
+    if (!isCorrect) {
+      this.loading[index] = true;
+      this.verify(exercise, index);
+    }
   }
 
 
   verify(exercise: Exercise, index: number) {
+    const rawResponse = this.userResponses[index];
+    const userAnswer = exercise.options && typeof rawResponse === 'number'
+      ? exercise.options[rawResponse]
+      : rawResponse;
+
     this.mainService.verifyExercise({
       course: this.course,
       subject: this.subject,
-      exercise: exercise,
+      exercise: { ...exercise, userAnswer }
     }).subscribe({
       next: (res) => {
         this.IAresponse[index] = res.data.replace(/\n/g, '<br>');
@@ -71,5 +78,6 @@ export class LanguageComponent {
       }
     });
   }
+
 
 }

@@ -16,6 +16,7 @@ export type Exercise = {
   question: string;
   options: string[] | null;
   answer: string | number;
+  userAnswer?: string | number;
 };
 
 @Component({

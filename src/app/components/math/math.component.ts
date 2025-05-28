@@ -30,16 +30,12 @@ export class MathComponent {
   preguntaRespondida: boolean[] = [];
   loading: boolean[] = [];
   IAresponse: string[] = [];
-
   userResponses: (string | number)[] = [];
   respuestasCorrectas: (boolean | null)[] = [];
-
-
-
   mostrarMatematicas = false;
 
   viewAnswer(index: number) {
-    this.loading[index] = true;
+
     const exercise = this.exercises[index];
     const response = this.userResponses[index];
     const correct = exercise.answer;
@@ -51,25 +47,33 @@ export class MathComponent {
 
     this.respuestasCorrectas[index] = isCorrect;
     this.preguntaRespondida[index] = true;
-
-    this.verify(exercise, index);
+    if (!isCorrect) {
+      this.loading[index] = true;
+      this.verify(exercise, index, response);
+      return;
+    }
   }
 
-  verify(exercise: Exercise, index: number) {
+  verify(exercise: Exercise, index: number, userAnswer: string | number) {
+    const resolvedAnswer = exercise.options && typeof userAnswer === 'number'
+      ? exercise.options[userAnswer]
+      : userAnswer;
+
     this.mainService.verifyExercise({
       course: this.course,
       subject: this.subject,
-      exercise: exercise,
+      exercise: { ...exercise, userAnswer: resolvedAnswer }
     }).subscribe({
       next: (res) => {
-        this.IAresponse[index] = res.data.replace(/\n/g, '<br>');
+        const clean = res.data.replace(/\n/g, '<br>').replace(/^.*?(Hola\b)/i, '$1');
+        this.IAresponse[index] = clean;
+
       },
       complete: () => {
         this.loading[index] = false;
       }
     });
   }
-
 
   formatLatex(input: string): string {
     return input.replace(/\[\[(.+?)\]\]/g, (_match, expr) => {
