@@ -1,4 +1,4 @@
-import { Component, Input, inject, AfterViewChecked, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, inject, AfterViewChecked, SimpleChanges, OnChanges, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Exercise } from '../../app.component';
 import { FormsModule } from '@angular/forms';
@@ -6,18 +6,18 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { MainService } from '../../../services/main.services';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 
-import { ElementRef, QueryList, ViewChildren, AfterViewInit } from '@angular/core';
+import { ElementRef, QueryList, ViewChildren, ChangeDetectorRef } from '@angular/core';
 
 declare const MathJax: any;
 
 
-type Paso = {
+export type Paso = {
   explicacion: string;
   visual_matematica: string;
   en_que_debo_mejorar: string;
 };
 
-type Evaluacion = {
+export type Evaluacion = {
   correcta: boolean;
   pasos: Paso[];
 };
@@ -38,7 +38,7 @@ type Evaluacion = {
   templateUrl: './math.component.html',
   styleUrl: './math.component.css'
 })
-export class MathComponent implements AfterViewChecked, OnChanges {
+export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
   @Input() exercises!: Exercise[];
   @Input() course!: '1M' | '2M' | '3M' | '4M';
   @Input() subject!: 'LANG' | 'MATH';
@@ -53,7 +53,7 @@ export class MathComponent implements AfterViewChecked, OnChanges {
   private isDrawing: boolean[] = [];
 
 
-
+  private cdr = inject(ChangeDetectorRef);
 
 
 
@@ -71,18 +71,33 @@ export class MathComponent implements AfterViewChecked, OnChanges {
 
   @ViewChildren('questionEl') questionElements!: QueryList<ElementRef>;
   @ViewChildren('optionEl') optionElements!: QueryList<ElementRef>;
+  @ViewChildren('aiResponseBlock') aiResponseBlocks!: QueryList<ElementRef>;
+
+  ngOnInit(): void {
+    this.needsTypeset = true;
+    this.loading = Array(this.exercises.length).fill(false);
+    this.IAresponse = Array(this.exercises.length).fill('');
+    this.preguntaRespondida = Array(this.exercises.length).fill(false);
+    this.userResponses = Array(this.exercises.length).fill('');
+    this.respuestasCorrectas = Array(this.exercises.length).fill(null);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exercises']) {
       this.needsTypeset = true;
     }
+    this.loading = Array(this.exercises.length).fill(false);
+    this.IAresponse = Array(this.exercises.length).fill('');
+    this.preguntaRespondida = Array(this.exercises.length).fill(false);
+    this.userResponses = Array(this.exercises.length).fill('');
+    this.respuestasCorrectas = Array(this.exercises.length).fill(null);
   }
 
 
   ngAfterViewInit() {
     this.questionElements.forEach((el, i) => {
       const wrapped = this.wrapMathExpressions(this.exercises[i].question);
-      const html = this.replaceLatex(wrapped);
+      const html = this.replaceLatex(this.exercises[i].question);
       el.nativeElement.innerHTML = html;
     });
 
@@ -100,7 +115,7 @@ export class MathComponent implements AfterViewChecked, OnChanges {
   ngAfterViewChecked(): void {
     if (this.needsTypeset && this.questionElements?.length && this.exercises?.length) {
       this.questionElements.forEach((el, i) => {
-        const html = this.replaceLatex(this.wrapMathExpressions(this.exercises[i].question));
+        const html = this.replaceLatex(this.exercises[i].question);
         el.nativeElement.innerHTML = html;
       });
 
@@ -110,7 +125,7 @@ export class MathComponent implements AfterViewChecked, OnChanges {
           e.options.forEach((opt, j) => {
             const el = this.optionElements.get(index);
             if (el) {
-              const processed = this.replaceLatex(this.wrapMathExpressions(opt));
+              const processed = this.replaceLatex(opt);
               el.nativeElement.innerHTML = processed;
             }
             index++;
@@ -118,9 +133,20 @@ export class MathComponent implements AfterViewChecked, OnChanges {
         }
       });
 
+      setTimeout(() => {
+        const el = this.aiResponseBlocks.get(index);
+        if (el && typeof MathJax !== 'undefined') {
+          MathJax.typesetPromise([el.nativeElement]).catch((err: any) =>
+            console.error('MathJax AI block render error', err)
+          );
+        }
+      }, 0);
+
       if (typeof MathJax !== 'undefined') {
         MathJax.typesetPromise().catch((err: any) => console.error('MathJax render error', err));
       }
+
+
 
       this.needsTypeset = false;
     }
@@ -193,7 +219,10 @@ export class MathComponent implements AfterViewChecked, OnChanges {
       next: (res) => {
         const evaluacion = this.parseEvaluacionLatex(res.data);
         this.IAresponse[index] = this.renderEvaluacion(evaluacion);
+        console.log("IAresponse[i]", this.IAresponse[index])
+        console.log("this.loading[index]]", this.loading[index])
         this.updateMathJax();
+        this.cdr.detectChanges();
         this.needsTypeset = true;
       },
       complete: () => {
@@ -236,17 +265,34 @@ export class MathComponent implements AfterViewChecked, OnChanges {
 
 
   renderEvaluacion(evaluacion: Evaluacion): string {
+
+     const header = evaluacion.correcta ? `
+      <span>
+        Creo que tu respuesta es correcta, ¡bien hecho!.
+      </span>
+    ` :
+      ` <span>
+          Creo que tu respuesta es incorrecta, no te preocupes. 
+          </span>
+          <br>
+          <span>Revisemos cómo se resuelve paso a paso.</span>
+      `
+
     return evaluacion.pasos
       .map((paso, idx) => {
-        const formula = this.replaceLatex(`[[${paso.visual_matematica}]]`);
+        const explicacion = this.replaceLatex(this.wrapMathExpressions(paso.explicacion));
+        const formula = this.replaceLatex(this.wrapMathExpressions(paso.visual_matematica));
+        const mejora = this.replaceLatex(this.wrapMathExpressions(paso.en_que_debo_mejorar));
         return `
-          <div class="mb-3">
-            <strong>Paso ${idx + 1})</strong><br>
-            <span>${paso.explicacion}</span><br>
-            <span>${formula}</span><br>
-            <em>En qué debes mejorar:</em> ${paso.en_que_debo_mejorar}
-          </div>
-        `;
+        <div class="mb-3">
+          ${header}
+          <br>
+          <strong>Paso ${idx + 1})</strong><br>
+          <span>${explicacion}</span><br>
+          <span>${formula}</span><br>
+          <em>Consejo:</em> ${mejora}
+        </div>
+      `;
       })
       .join('');
   }
@@ -258,31 +304,57 @@ export class MathComponent implements AfterViewChecked, OnChanges {
     const unitReplacements: [RegExp, string][] = [
       [/\b(\d+(?:\.\d+)?)\s*m\/s\b/g, '$1\\,\\text{m/s}'],
       [/\b(\d+(?:\.\d+)?)\s*km\/h\b/g, '$1\\,\\text{km/h}'],
+      [/\b(\d+(?:\.\d+)?)\s*cm\b/g, '$1\\,\\text{cm}'],
+      [/\b(\d+(?:\.\d+)?)\s*cm²\b/g, '$1\\,\\text{cm}^2'],
       [/\b(\d+(?:\.\d+)?)\s*cm\/s\b/g, '$1\\,\\text{cm/s}'],
       [/\b(\d+(?:\.\d+)?)\s*ms⁻¹\b/g, '$1\\,\\text{m\\cdot s^{-1}}'],
       [/\b(\d+(?:\.\d+)?)\s*kg\b/g, '$1\\,\\text{kg}'],
       [/\b(\d+(?:\.\d+)?)\s*g\b/g, '$1\\,\\text{g}'],
       [/\b(\d+(?:\.\d+)?)\s*m\b/g, '$1\\,\\text{m}'],
-      [/\b(\d+(?:\.\d+)?)\s*cm\b/g, '$1\\,\\text{cm}'],
       [/\b(\d+(?:\.\d+)?)\s*mm\b/g, '$1\\,\\text{mm}'],
       [/\b(\d+(?:\.\d+)?)\s*s\b/g, '$1\\,\\text{s}'],
       [/\b(\d+(?:\.\d+)?)\s*%\b/g, '$1\\,\\%'],
       [/\b(\d+(?:\.\d+)?)\s*°\b/g, '$1\\,^{\\circ}']
     ];
 
-    return input.replace(/\[\[(.+?)\]\]/g, (_match, expr) => {
-      let cleaned = expr
-        .replace(/(?<!\\)(frac|times|sqrt|pm|cdot|leq|geq|neq|infty|left|right|sin|cos|tan|log|ln|text|pi)/g, '\\$1')
-        .replace(/([0-9])\s*\(/g, '$1\\cdot(')
-        .trim();
-
+    const applyUnits = (expr: string): string => {
       for (const [pattern, replacement] of unitReplacements) {
-        cleaned = cleaned.replace(pattern, replacement);
+        expr = expr.replace(pattern, replacement);
       }
+      return expr;
+    };
 
+
+    const escapeLatex = (expr: string): string => {
+      expr = expr.replace(/×/g, '\\times');
+      return expr
+        .replace(/(?<!\\)(frac|sqrt|cdot|pm|leq|geq|neq|infty|text|pi|times|sin|cos|tan|log|ln)/g, '\\$1')
+        .replace(/([0-9])\s*\(/g, '$1\\cdot(')
+        .replace(/([0-9])([a-zA-Z])/g, '$1 $2')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+
+    input = input.replace(/\[\[(.+?)\]\]/g, (_match, expr) => {
+      const cleaned = applyUnits(escapeLatex(expr));
+      return `\(${cleaned}\)`;
+    });
+
+    input = input.replace(/\\\((.+?)\\\)/g, (_match, expr) => {
+      const cleaned = applyUnits(escapeLatex(expr));
       return `\\(${cleaned}\\)`;
     });
+
+    input = input.replace(/\$(.+?)\$/g, (_match, expr) => {
+      const cleaned = applyUnits(escapeLatex(expr));
+      return `\\(${cleaned}\\)`;
+    });
+
+
+    return input;
   }
+
+
 
 
 
@@ -290,11 +362,22 @@ export class MathComponent implements AfterViewChecked, OnChanges {
   wrapMathExpressions(text: string): string {
     if (typeof text !== 'string') return text;
 
+
+    if (text.includes('$') && /\$[^$]+\$/.test(text)) {
+      return text; // ya es LaTeX, no envolver
+    }
+
     // Si el texto completo es una ecuación simple como y = 2x + 3
-    const fullEquation = /^\s*[a-zA-Z]+\s*=\s*[-+*/^()\d\s.a-zA-Z]+$/;
+    // const fullEquation = /^\s*[a-zA-Z]+\s*=\s*[-+*/^()\d\s.a-zA-Z]+$/;
+    // if (fullEquation.test(text.trim())) {
+    //   return text.includes('[[') ? text : `[[${text.trim()}]]`;
+    // }
+
+    const fullEquation = /^[^=]+=[^=]+$/;
     if (fullEquation.test(text.trim())) {
       return text.includes('[[') ? text : `[[${text.trim()}]]`;
     }
+
 
 
     // Si todo el texto es matemático, lo envolvemos completo

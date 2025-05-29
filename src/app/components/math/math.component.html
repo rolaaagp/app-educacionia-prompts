@@ -60,52 +60,16 @@
           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
         ></textarea>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700"
-            >Dibuja tu respuesta:</label
-          >
-          <canvas
-            #canvasElement
-            width="300"
-            height="200"
-            class="border border-gray-400 rounded bg-white text-black cursor-crosshair"
-            (mousedown)="startDrawing($event, i)"
-            (mouseup)="stopDrawing(i)"
-            (mousemove)="draw($event, i)"
-            (mouseleave)="stopDrawing(i)"
-          ></canvas>
+        <div *ngIf="e.type === 'open_ended'" class="pt-2">
           <button
-            type="button"
-            (click)="clearCanvas(i)"
-            class="mt-2 text-sm text-red-600 underline"
+            class="cursor-pointer px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+            (click)="viewAnswer(i)"
           >
-            Borrar dibujo
+            Enviar respuesta
           </button>
         </div>
 
-        <div class="cursor-pointer">
-          <label class="block text-sm font-medium text-gray-700"
-            >O sube una imagen:</label
-          >
-          <input
-           class=" p-2 text-sm border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none " id="file_input" type="file"
-            accept="image/*"
-            (change)="handleImageUpload($event, i)"
-            [disabled]="preguntaRespondida[i]"
-          />
-        </div>
-      </div>
-
-      <div *ngIf="e.type === 'open_ended'" class="pt-2">
-        <button
-          class="cursor-pointer px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          (click)="viewAnswer(i)"
-        >
-          Enviar respuesta
-        </button>
-      </div>
-
-      <!-- <div *ngIf="respuestasCorrectas[i] !== undefined">
+        <!-- <div *ngIf="respuestasCorrectas[i] !== undefined">
         <p
           class="mt-2 font-semibold"
           [ngClass]="{
@@ -121,13 +85,20 @@
         </p>
       </div> -->
 
-      <ng-container *ngIf="loading[i]; else content">
-        <app-skeleton></app-skeleton>
-        <app-skeleton></app-skeleton>
-      </ng-container>
-      <ng-template #content>
-        <p *ngIf="IAresponse[i]" [innerHTML]="IAresponse[i]"></p>
-      </ng-template>
+
+
+      </div>
+
+
+      
+        <ng-container *ngIf="loading[i]; else content">
+          <app-skeleton></app-skeleton>
+          <app-skeleton></app-skeleton>
+        </ng-container>
+        <ng-template #content>
+          <p #aiResponseBlock [innerHTML]="IAresponse[i]"></p>
+        </ng-template>
+
     </div>
   </div>
 </div>

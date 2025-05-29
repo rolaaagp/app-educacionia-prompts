@@ -11,3 +11,14 @@ textarea {
 li {
   list-style: none;
 }
+
+
+mjx-container {
+  overflow-x: auto;
+  display: block;
+  padding: 0.5rem 0;
+}
+
+mjx-math {
+  font-size: 1rem;
+}

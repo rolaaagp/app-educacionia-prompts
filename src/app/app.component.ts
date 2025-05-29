@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     typeQuestions: "mix"
   };
 
-  excLANG!: Exercise[];
+  excLANG: Exercise[] = [];
   excMATH: Exercise[] = [];
 
   t: string = "";
@@ -56,128 +56,124 @@ export class AppComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // this.excMATH = [
-    //   {
-    //     "id": 1,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es el valor de x en la ecuación 2x + 5 = 15?",
-    //     "options": [
-    //       "5",
-    //       "7",
-    //       "10",
-    //       "15"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 2,
-    //     "type": "multiple_choice",
-    //     "question": "Si una recta pasa por los puntos (2, 3) y (4, 7), ¿cuál es su pendiente?",
-    //     "options": [
-    //       "1",
-    //       "2",
-    //       "3",
-    //       "4"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 3,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes funciones es lineal?",
-    //     "options": [
-    //       "f(x) = x^2",
-    //       "f(x) = 3x + 2",
-    //       "f(x) = sin(x)",
-    //       "f(x) = log(x)"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 4,
-    //     "type": "multiple_choice",
-    //     "question": "Si un objeto cae desde una altura de 100 metros, ¿cuál es su velocidad al llegar al suelo?",
-    //     "options": [
-    //       "10 m/s",
-    //       "20 m/s",
-    //       "30 m/s",
-    //       "40 m/s"
-    //     ],
-    //     "answer": 2
-    //   },
-    //   {
-    //     "id": 5,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es la probabilidad de obtener un número par al lanzar un dado?",
-    //     "options": [
-    //       "1/2",
-    //       "1/3",
-    //       "1/4",
-    //       "1/6"
-    //     ],
-    //     "answer": 0
-    //   },
-    //   {
-    //     "id": 6,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es el área de un círculo con radio de 5 cm?",
-    //     "options": [
-    //       "25π cm²",
-    //       "50π cm²",
-    //       "75π cm²",
-    //       "100π cm²"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 7,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es la ecuación de una recta que pasa por los puntos (2, 3) y (4, 7)?",
-    //     "options": [
-    //       "y = 2x + 1",
-    //       "y = 2x + 3",
-    //       "y = 4x - 1",
-    //       "y = 4x - 3"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 8,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es la razón de proporcionalidad entre dos magnitudes si la primera se duplica cuando la segunda se triplica?",
-    //     "options": [
-    //       "1/3",
-    //       "1/2",
-    //       "2/3",
-    //       "3/2"
-    //     ],
-    //     "answer": 3
-    //   },
-    //   {
-    //     "id": 9,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es el valor de x en la ecuación 3x - 7 = 14?",
-    //     "options": [
-    //       "7",
-    //       "9",
-    //       "10",
-    //       "21"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 10,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es la probabilidad de obtener una cara al lanzar una moneda?",
-    //     "options": [
-    //       "1/4",
-    //       "1/3",
-    //       "1/2",
-    //       "2/3"
-    //     ],
-    //     "answer": 2
-    //   }
-    // ];
+    this.excLANG = [
+      {
+        "id": 1,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes palabras o expresiones proviene de una lengua originaria y se usa en el español de Chile?",
+        "options": [
+          "\\(\\text{Chao}\\)",
+          "\\(\\text{Cachai}\\)",
+          "\\(\\text{Bacán}\\)",
+          "\\(\\text{Pololo}\\)"
+        ],
+        "answer": 3
+      },
+      {
+        "id": 2,
+        "type": "open_ended",
+        "question": "Investiga y describe una jerga generacional que se use en tu comunidad. Explica su origen, significado y contexto de uso.",
+        "options": null,
+        "answer": ""
+      },
+      {
+        "id": 3,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes expresiones provendría más probablemente de un pueblo migrante que ha llegado a Chile?",
+        "options": [
+          "\\(\\text{Güena}\\)",
+          "\\(\\text{Cabro}\\)",
+          "\\(\\text{Weón}\\)",
+          "\\(\\text{Onda}\\)"
+        ],
+        "answer": 1
+      },
+      {
+        "id": 4,
+        "type": "open_ended",
+        "question": "Analiza el siguiente fragmento y explica cómo se relacionan las palabras \"aliado\", \"mancomunada\" y \"convenio\".",
+        "options": null,
+        "answer": ""
+      },
+      {
+        "id": 5,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes afirmaciones sobre el español de Chile es correcta?",
+        "options": [
+          "\\(\\text{Es una variante completamente diferente al español estándar}\\)",
+          "\\(\\text{Tiene un vocabulario básico fundamental común con otras variantes}\\)",
+          "\\(\\text{Se habla de forma muy distinta a otras regiones de Hispanoamérica}\\)",
+          "\\(\\text{No comparte la misma morfosintaxis que el español estándar}\\)"
+        ],
+        "answer": 2
+      }
+    ]
+
+    this.excMATH = [
+      {
+        "id": 1,
+        "type": "multiple_choice",
+        "question": "¿Cuál es la solución de la ecuación $2x + 5 = 13$?",
+        "options": [
+          "$x = 4$",
+          "$x = 3$",
+          "$x = 2$",
+          "$x = 1$"
+        ],
+        "answer": 0
+      },
+      {
+        "id": 2,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes funciones es lineal?",
+        "options": [
+          "$f(x) = 2x^2 + 3$",
+          "$f(x) = 4x + 1$",
+          "$f(x) = \sqrt{x} + 2$",
+          "$f(x) = x^3 - 1$"
+        ],
+        "answer": 1
+      },
+      {
+        "id": 3,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes afirmaciones sobre funciones afines es verdadera?",
+        "options": [
+          "Todas las funciones afines son lineales",
+          "Ninguna función afín es lineal",
+          "Algunas funciones afines son lineales",
+          "Las funciones afines no tienen pendiente"
+        ],
+        "answer": 2
+      },
+      {
+        "id": 4,
+        "type": "multiple_choice",
+        "question": "¿Cuál de los siguientes es un ejemplo de pensamiento metacognitivo en matemáticas?",
+        "options": [
+          "Resolver una ecuación de segundo grado",
+          "Graficar una función cuadrática",
+          "Reflexionar sobre las estrategias utilizadas para resolver un problema",
+          "Calcular el área de un círculo"
+        ],
+        "answer": 2
+      },
+      {
+        "id": 5,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes es una característica de una función lineal?",
+        "options": [
+          "Tiene una gráfica parabólica",
+          "Tiene una gráfica exponencial",
+          "Tiene una gráfica recta",
+          "Tiene una gráfica logarítmica"
+        ],
+        "answer": 2
+      }
+    ]
+
+    this.format(this.excLANG)
+
     this.socketService.connectadConfirmed$.subscribe((estado) => {
       console.log("WebSocket:", estado); // o usa un toast, alert, etc.
     });
@@ -223,10 +219,19 @@ export class AppComponent implements OnInit {
 
     this.mainService.generateExercises(this.formData).subscribe({
       next: (res) => {
-        const rawData = res.data;
+        let rawData = res.data;
+        if (rawData?.rawData && typeof rawData.rawData === 'string') {
+          try {
+            rawData = JSON.parse(rawData.rawData);
+          } catch (err) {
+            console.error('Error al parsear rawData.rawData como JSON:', err);
+            rawData = [];
+          }
+        }
+
         const isArray = Array.isArray(rawData);
         console.log({ rawData });
-        if (!isArray && retryCount < 3) {
+        if (!isArray || !rawData || (isArray && rawData.length <= 0) && retryCount < 3) {
           const text = rawData?.toString().toLowerCase() || '';
           if (text.startsWith("sorry") || text.startsWith("lo siento")) {
             console.warn("Respuesta del agente indica fallo, reintentando...");
@@ -239,10 +244,7 @@ export class AppComponent implements OnInit {
         const limited = parsed.slice(0, this.formData.quantity_exercise);
 
         if (!isArray) {
-          for (const x of limited) {
-            x.options = x.options ? x.options.map((opt: string) => opt.replace(/text/g, '')) : null;
-            x.question = x.question.replace(/text/g, '');
-          }
+          this.format(limited);
         }
 
         if (this.formData.subject === "LANG") {
@@ -259,9 +261,31 @@ export class AppComponent implements OnInit {
         this.loading = false;
       }
     });
+
   }
 
+  format(limited: Exercise[]) {
+    for (const x of limited) {
+      if (x.options && x.options.some((opt: string) => opt.includes('\\(') || opt.includes('\\text'))) {
+        x.options = x.options.map((opt: string) =>
+          opt
+            .replace(/\\\(/g, '')
+            .replace(/\\\)/g, '')
+            .replace(/\\text\{(.*?)\}/g, '$1')
+            .trim()
+        );
+      }
 
+      if (x.question.includes('\\(') || x.question.includes('\\text')) {
+        x.question = x.question
+          .replace(/\\\(/g, '')
+          .replace(/\\\)/g, '')
+          .replace(/\\text\{(.*?)\}/g, '$1')
+          .trim();
+      }
+    }
+
+  }
 
   extractExercisesFromText(text: string): Exercise[] {
     const start = text.indexOf('[');

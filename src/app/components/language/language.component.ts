@@ -5,6 +5,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { FormsModule } from '@angular/forms';
 import { MainService } from '../../../services/main.services';
 import { SkeletonComponent } from "../skeleton/skeleton.component";
+import { Evaluacion } from '../math/math.component';
 
 @Component({
   selector: 'app-language',
@@ -40,7 +41,7 @@ export class LanguageComponent {
   }
 
   viewAnswer(index: number) {
-    
+
     const exercise = this.exercises[index];
     const response = this.userResponses[index];
     const correct = exercise.answer;
@@ -71,13 +72,78 @@ export class LanguageComponent {
       exercise: { ...exercise, userAnswer }
     }).subscribe({
       next: (res) => {
-        this.IAresponse[index] = res.data.replace(/\n/g, '<br>');
+        // this.IAresponse[index] = res.data.replace(/\n/g, '<br>');
+
+        const evaluacion = this.parseEvaluacionLatex(res.data);
+        this.IAresponse[index] = this.renderEvaluacion(evaluacion);
+
+
       },
       complete: () => {
         this.loading[index] = false;
       }
     });
   }
+  parseEvaluacionLatex(data: string | any): Evaluacion {
+    try {
+      let evaluacion: Evaluacion;
 
+      if (typeof data === 'string') {
+        const match = data.match(/{[\s\S]*}/);
+        if (!match) throw new Error("No se encontró JSON en la respuesta");
+        evaluacion = JSON.parse(match[0]);
+      } else if (typeof data === 'object' && Array.isArray(data.pasos)) {
+        evaluacion = data;
+      } else if (Array.isArray(data)) {
+        evaluacion = {
+          correcta: false,
+          pasos: data
+        };
+      } else {
+        throw new Error("Formato no reconocido");
+      }
+
+      evaluacion.pasos = evaluacion.pasos.map((paso) => ({
+        ...paso,
+        visual_matematica: paso.visual_matematica.replace(/\\\\/g, "\\"),
+      }));
+
+      return evaluacion;
+
+    } catch (err) {
+      console.error("Error al parsear evaluación:", err);
+      return { correcta: false, pasos: [] };
+    }
+  }
+
+
+  renderEvaluacion(evaluacion: Evaluacion): string {
+    const header = evaluacion.correcta ? `
+      <span>
+        Creo que tu respuesta es correcta, ¡bien hecho!.
+      </span>
+    ` :
+      ` <span>
+          Creo que tu respuesta es incorrecta, no te preocupes. 
+          </span>
+          <br>
+          <span>Revisemos cómo se resuelve paso a paso.</span>
+      `
+    return evaluacion.pasos
+      .map((paso, idx) => {
+        const explicacion = paso.explicacion
+        const mejora = paso.en_que_debo_mejorar
+        return `
+        <div class="mb-3">
+          ${header}
+          <br>
+          <strong>Paso ${idx + 1})</strong><br>
+          <span>${explicacion}</span><br>
+          <em>Consejo:</em> ${mejora}
+        </div>
+      `;
+      })
+      .join('');
+  }
 
 }
