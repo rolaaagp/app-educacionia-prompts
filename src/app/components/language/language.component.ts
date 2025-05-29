@@ -104,11 +104,6 @@ export class LanguageComponent {
         throw new Error("Formato no reconocido");
       }
 
-      evaluacion.pasos = evaluacion.pasos.map((paso) => ({
-        ...paso,
-        visual_matematica: paso.visual_matematica.replace(/\\\\/g, "\\"),
-      }));
-
       return evaluacion;
 
     } catch (err) {
@@ -130,7 +125,8 @@ export class LanguageComponent {
         <div class="mb-3">
           <strong>Paso ${idx + 1})</strong><br>
           <span>${explicacion}</span><br>
-          <em>Consejo:</em> ${mejora}
+          <br>
+          <em class="mt-3">Consejo:</em> ${mejora}
         </div>
       `;
       })

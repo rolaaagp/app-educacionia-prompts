@@ -172,103 +172,6 @@ export class AppComponent implements OnInit {
     //   }
     // ]
 
-    this.excMATH = [
-      {
-        "id": 1,
-        "type": "multiple_choice",
-        "question": "¿Cuál es el resultado de la siguiente suma: $2 + 3$?",
-        "options": [
-          "3",
-          "4",
-          "5",
-          "6"
-        ],
-        "answer": 1
-      },
-      {
-        "id": 2,
-        "type": "open_ended",
-        "question": "Resuelve la siguiente suma: $5 + 7$",
-        "options": null,
-        "answer": "12"
-      },
-      {
-        "id": 3,
-        "type": "multiple_choice",
-        "question": "¿Cuál es el resultado de la siguiente suma: $8 + 2$?",
-        "options": [
-          "8",
-          "9",
-          "10",
-          "11"
-        ],
-        "answer": 2
-      },
-      {
-        "id": 4,
-        "type": "open_ended",
-        "question": "Resuelve la siguiente suma: $3 + 4$",
-        "options": null,
-        "answer": "7"
-      },
-      {
-        "id": 5,
-        "type": "multiple_choice",
-        "question": "¿Cuál es el resultado de la siguiente suma: $6 + 1$?",
-        "options": [
-          "5",
-          "6",
-          "7",
-          "8"
-        ],
-        "answer": 3
-      },
-      {
-        "id": 6,
-        "type": "open_ended",
-        "question": "Resuelve la siguiente suma: $9 + 2$",
-        "options": null,
-        "answer": "11"
-      },
-      {
-        "id": 7,
-        "type": "multiple_choice",
-        "question": "¿Cuál es el resultado de la siguiente suma: $4 + 4$?",
-        "options": [
-          "6",
-          "7",
-          "8",
-          "9"
-        ],
-        "answer": 3
-      },
-      {
-        "id": 8,
-        "type": "open_ended",
-        "question": "Resuelve la siguiente suma: $7 + 3$",
-        "options": null,
-        "answer": "10"
-      },
-      {
-        "id": 9,
-        "type": "multiple_choice",
-        "question": "¿Cuál es el resultado de la siguiente suma: $1 + 6$?",
-        "options": [
-          "5",
-          "6",
-          "7",
-          "8"
-        ],
-        "answer": 2
-      },
-      {
-        "id": 10,
-        "type": "open_ended",
-        "question": "Resuelve la siguiente suma: $2 + 8$",
-        "options": null,
-        "answer": "10"
-      }
-    ]
     this.format(this.excLANG)
 
     this.socketService.connectadConfirmed$.subscribe((estado) => {
@@ -313,8 +216,8 @@ export class AppComponent implements OnInit {
 
   solicitar(retryCount: number = 0) {
     this.loading = true;
-
-    this.mainService.generateExercises(this.formData).subscribe({
+    const form = {...this.formData, contents: this.formData.contents.toLowerCase()}
+    this.mainService.generateExercises(form).subscribe({
       next: (res) => {
         let rawData = res.data;
         if (rawData?.rawData && typeof rawData.rawData === 'string') {

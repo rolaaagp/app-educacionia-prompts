@@ -282,7 +282,8 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
           <strong>Paso ${idx + 1})</strong><br>
           <span>${explicacion}</span><br>
           <span>${formula}</span><br>
-          <em>Consejo:</em> ${mejora}
+          <br>
+          <em class="mt-3">Consejo:</em> ${mejora}
         </div>
       `;
       })
