@@ -28,7 +28,7 @@
     >
       <div class="text-gray-800" [@fadeIn]>
         <strong>{{ i + 1 }}.</strong>
-        <span [innerHTML]="formatLatex(e.question)"></span>
+        <span #questionEl></span>
       </div>
 
       <ul *ngIf="e.options" class="space-y-2" [@fadeIn]>
@@ -45,7 +45,7 @@
             />
             <span class="text-gray-700">
               <strong>{{ getOptionLetter(j) }}.</strong>
-              <span [innerHTML]="formatLatex(opt)"></span>
+              <span [innerHTML]="replaceLatex(opt)"></span>
             </span>
           </label>
         </li>
@@ -70,7 +70,7 @@
         </button>
       </div>
 
-      <div *ngIf="respuestasCorrectas[i] !== undefined">
+      <!-- <div *ngIf="respuestasCorrectas[i] !== undefined">
         <p
           class="mt-2 font-semibold"
           [ngClass]="{
@@ -84,14 +84,14 @@
               : "✘ Respuesta incorrecta"
           }}
         </p>
-      </div>
+      </div> -->
 
       <ng-container *ngIf="loading[i]; else content">
         <app-skeleton></app-skeleton>
         <app-skeleton></app-skeleton>
       </ng-container>
       <ng-template #content>
-        <p [innerHTML]="IAresponse[i]"></p>
+        <p *ngIf="IAresponse[i]" [innerHTML]="IAresponse[i]"></p>
       </ng-template>
     </div>
   </div>
