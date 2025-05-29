@@ -19,6 +19,7 @@ export type Paso = {
 
 export type Evaluacion = {
   correcta: boolean;
+  frase_motivacional: string;
   pasos: Paso[];
 };
 
@@ -75,29 +76,30 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
 
   ngOnInit(): void {
     this.needsTypeset = true;
-    this.loading = Array(this.exercises.length).fill(false);
-    this.IAresponse = Array(this.exercises.length).fill('');
-    this.preguntaRespondida = Array(this.exercises.length).fill(false);
-    this.userResponses = Array(this.exercises.length).fill('');
-    this.respuestasCorrectas = Array(this.exercises.length).fill(null);
+    // this.loading = Array(this.exercises.length).fill(false);
+    // this.IAresponse = Array(this.exercises.length).fill('');
+    // this.preguntaRespondida = Array(this.exercises.length).fill(false);
+    // this.userResponses = Array(this.exercises.length).fill('');
+    // this.respuestasCorrectas = Array(this.exercises.length).fill(null);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exercises']) {
       this.needsTypeset = true;
     }
-    this.loading = Array(this.exercises.length).fill(false);
-    this.IAresponse = Array(this.exercises.length).fill('');
-    this.preguntaRespondida = Array(this.exercises.length).fill(false);
-    this.userResponses = Array(this.exercises.length).fill('');
-    this.respuestasCorrectas = Array(this.exercises.length).fill(null);
+    if (this.exercises) {
+      this.loading = Array(this.exercises.length).fill(false);
+      this.IAresponse = Array(this.exercises.length).fill('');
+      this.preguntaRespondida = Array(this.exercises.length).fill(false);
+      this.userResponses = Array(this.exercises.length).fill('');
+      this.respuestasCorrectas = Array(this.exercises.length).fill(null);
+    }
   }
 
 
   ngAfterViewInit() {
     this.questionElements.forEach((el, i) => {
-      const wrapped = this.wrapMathExpressions(this.exercises[i].question);
-      const html = this.replaceLatex(this.exercises[i].question);
+      const html = this.replaceLatex(this.wrapMathExpressions(this.exercises[i].question));
       el.nativeElement.innerHTML = html;
     });
 
@@ -115,7 +117,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
   ngAfterViewChecked(): void {
     if (this.needsTypeset && this.questionElements?.length && this.exercises?.length) {
       this.questionElements.forEach((el, i) => {
-        const html = this.replaceLatex(this.exercises[i].question);
+        const html = this.replaceLatex(this.wrapMathExpressions(this.exercises[i].question));
         el.nativeElement.innerHTML = html;
       });
 
@@ -244,6 +246,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
       } else if (Array.isArray(data)) {
         evaluacion = {
           correcta: false,
+          frase_motivacional: "",
           pasos: data
         };
       } else {
@@ -259,34 +262,23 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
 
     } catch (err) {
       console.error("Error al parsear evaluación:", err);
-      return { correcta: false, pasos: [] };
+      return { correcta: false, frase_motivacional: "", pasos: [] };
     }
   }
 
 
   renderEvaluacion(evaluacion: Evaluacion): string {
+    const header = evaluacion.correcta
+      ? `<span>Creo que tu respuesta es correcta, ¡bien hecho!.</span><br><br>`
+      : `<span>Creo que tu respuesta es incorrecta, no te preocupes.</span><br><span>Revisemos cómo se resuelve paso a paso.</span><br><br>`;
 
-     const header = evaluacion.correcta ? `
-      <span>
-        Creo que tu respuesta es correcta, ¡bien hecho!.
-      </span>
-    ` :
-      ` <span>
-          Creo que tu respuesta es incorrecta, no te preocupes. 
-          </span>
-          <br>
-          <span>Revisemos cómo se resuelve paso a paso.</span>
-      `
-
-    return evaluacion.pasos
+    const pasosHTML = evaluacion.pasos
       .map((paso, idx) => {
         const explicacion = this.replaceLatex(this.wrapMathExpressions(paso.explicacion));
         const formula = this.replaceLatex(this.wrapMathExpressions(paso.visual_matematica));
         const mejora = this.replaceLatex(this.wrapMathExpressions(paso.en_que_debo_mejorar));
         return `
         <div class="mb-3">
-          ${header}
-          <br>
           <strong>Paso ${idx + 1})</strong><br>
           <span>${explicacion}</span><br>
           <span>${formula}</span><br>
@@ -295,11 +287,19 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
       `;
       })
       .join('');
+
+    const frase = evaluacion.frase_motivacional
+      ? `<div class="mt-4">${evaluacion.frase_motivacional}</div>`
+      : `<div class="mt-4">Vas por buen camino, solo falta afinar algunos detalles.</div>`;
+
+    return header + pasosHTML + frase;
   }
+
 
 
   replaceLatex(input: string): string {
     if (!input || typeof input !== 'string') return input;
+    input = input.replace(/\[\[\(([^()\[\]]+)\)\]\]/g, '[[$1]]');
 
     const unitReplacements: [RegExp, string][] = [
       [/\b(\d+(?:\.\d+)?)\s*m\/s\b/g, '$1\\,\\text{m/s}'],
@@ -420,7 +420,10 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
       { name: 'pertenencia_conjunto', pattern: /\b[a-zA-Z]+\s*∈\s*ℝ|ℕ|ℤ|ℚ\b/g },
       { name: 'sumatoria', pattern: /∑_\{\s*[a-zA-Z]=\d+\s*\}\^\{\s*[a-zA-Z\d]+\s*\}\s*[a-zA-Z\d\+\-\*\/\^]+\b/g },
       { name: 'productoria', pattern: /∏_\{\s*[a-zA-Z]=\d+\s*\}\^\{\s*[a-zA-Z\d]+\s*\}\s*[a-zA-Z\d\+\-\*\/\^]+\b/g },
-      { name: 'notacion_conjunto', pattern: /\{\s*[a-zA-Z]+\s*∈\s*ℝ\s*\|\s*[a-zA-Z\d\s<>=]+\s*\}/g }
+      { name: 'notacion_conjunto', pattern: /\{\s*[a-zA-Z]+\s*∈\s*ℝ\s*\|\s*[a-zA-Z\d\s<>=]+\s*\}/g },
+
+      // { name: 'fraccion_latex', pattern: /\\frac\{[^{}]+\}\{[^{}]+\}/g },
+      // { name: 'ecuacion_con_fraccion', pattern: /\(\\frac\{[^{}]+\}\{[^{}]+\}[^()]*\)/g }
 
     ];
 

@@ -42,8 +42,8 @@ export class AppComponent implements OnInit {
     typeQuestions: "mix"
   };
 
-  excLANG: Exercise[] = [];
-  excMATH: Exercise[] = [];
+  excLANG!: Exercise[];
+  excMATH!: Exercise[];
 
   t: string = "";
 
@@ -56,122 +56,219 @@ export class AppComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.excLANG = [
-      {
-        "id": 1,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes palabras o expresiones proviene de una lengua originaria y se usa en el español de Chile?",
-        "options": [
-          "\\(\\text{Chao}\\)",
-          "\\(\\text{Cachai}\\)",
-          "\\(\\text{Bacán}\\)",
-          "\\(\\text{Pololo}\\)"
-        ],
-        "answer": 3
-      },
-      {
-        "id": 2,
-        "type": "open_ended",
-        "question": "Investiga y describe una jerga generacional que se use en tu comunidad. Explica su origen, significado y contexto de uso.",
-        "options": null,
-        "answer": ""
-      },
-      {
-        "id": 3,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes expresiones provendría más probablemente de un pueblo migrante que ha llegado a Chile?",
-        "options": [
-          "\\(\\text{Güena}\\)",
-          "\\(\\text{Cabro}\\)",
-          "\\(\\text{Weón}\\)",
-          "\\(\\text{Onda}\\)"
-        ],
-        "answer": 1
-      },
-      {
-        "id": 4,
-        "type": "open_ended",
-        "question": "Analiza el siguiente fragmento y explica cómo se relacionan las palabras \"aliado\", \"mancomunada\" y \"convenio\".",
-        "options": null,
-        "answer": ""
-      },
-      {
-        "id": 5,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes afirmaciones sobre el español de Chile es correcta?",
-        "options": [
-          "\\(\\text{Es una variante completamente diferente al español estándar}\\)",
-          "\\(\\text{Tiene un vocabulario básico fundamental común con otras variantes}\\)",
-          "\\(\\text{Se habla de forma muy distinta a otras regiones de Hispanoamérica}\\)",
-          "\\(\\text{No comparte la misma morfosintaxis que el español estándar}\\)"
-        ],
-        "answer": 2
-      }
-    ]
+    // this.excLANG = [
+    //   {
+    //     "id": 1,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes palabras o expresiones proviene de una lengua originaria y se usa en el español de Chile?",
+    //     "options": [
+    //       "\\(\\text{Chao}\\)",
+    //       "\\(\\text{Cachai}\\)",
+    //       "\\(\\text{Bacán}\\)",
+    //       "\\(\\text{Pololo}\\)"
+    //     ],
+    //     "answer": 3
+    //   },
+    //   {
+    //     "id": 2,
+    //     "type": "open_ended",
+    //     "question": "Investiga y describe una jerga generacional que se use en tu comunidad. Explica su origen, significado y contexto de uso.",
+    //     "options": null,
+    //     "answer": ""
+    //   },
+    //   {
+    //     "id": 3,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes expresiones provendría más probablemente de un pueblo migrante que ha llegado a Chile?",
+    //     "options": [
+    //       "\\(\\text{Güena}\\)",
+    //       "\\(\\text{Cabro}\\)",
+    //       "\\(\\text{Weón}\\)",
+    //       "\\(\\text{Onda}\\)"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 4,
+    //     "type": "open_ended",
+    //     "question": "Analiza el siguiente fragmento y explica cómo se relacionan las palabras \"aliado\", \"mancomunada\" y \"convenio\".",
+    //     "options": null,
+    //     "answer": ""
+    //   },
+    //   {
+    //     "id": 5,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes afirmaciones sobre el español de Chile es correcta?",
+    //     "options": [
+    //       "\\(\\text{Es una variante completamente diferente al español estándar}\\)",
+    //       "\\(\\text{Tiene un vocabulario básico fundamental común con otras variantes}\\)",
+    //       "\\(\\text{Se habla de forma muy distinta a otras regiones de Hispanoamérica}\\)",
+    //       "\\(\\text{No comparte la misma morfosintaxis que el español estándar}\\)"
+    //     ],
+    //     "answer": 2
+    //   }
+    // ]
+
+    // this.excMATH = [
+    //   {
+    //     "id": 1,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es la solución de la ecuación $2x + 5 = 13$?",
+    //     "options": [
+    //       "$x = 4$",
+    //       "$x = 3$",
+    //       "$x = 2$",
+    //       "$x = 1$"
+    //     ],
+    //     "answer": 0
+    //   },
+    //   {
+    //     "id": 2,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes funciones es lineal?",
+    //     "options": [
+    //       "$f(x) = 2x^2 + 3$",
+    //       "$f(x) = 4x + 1$",
+    //       "$f(x) = \sqrt{x} + 2$",
+    //       "$f(x) = x^3 - 1$"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 3,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes afirmaciones sobre funciones afines es verdadera?",
+    //     "options": [
+    //       "Todas las funciones afines son lineales",
+    //       "Ninguna función afín es lineal",
+    //       "Algunas funciones afines son lineales",
+    //       "Las funciones afines no tienen pendiente"
+    //     ],
+    //     "answer": 2
+    //   },
+    //   {
+    //     "id": 4,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de los siguientes es un ejemplo de pensamiento metacognitivo en matemáticas?",
+    //     "options": [
+    //       "Resolver una ecuación de segundo grado",
+    //       "Graficar una función cuadrática",
+    //       "Reflexionar sobre las estrategias utilizadas para resolver un problema",
+    //       "Calcular el área de un círculo"
+    //     ],
+    //     "answer": 2
+    //   },
+    //   {
+    //     "id": 5,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes es una característica de una función lineal?",
+    //     "options": [
+    //       "Tiene una gráfica parabólica",
+    //       "Tiene una gráfica exponencial",
+    //       "Tiene una gráfica recta",
+    //       "Tiene una gráfica logarítmica"
+    //     ],
+    //     "answer": 2
+    //   }
+    // ]
 
     this.excMATH = [
       {
         "id": 1,
         "type": "multiple_choice",
-        "question": "¿Cuál es la solución de la ecuación $2x + 5 = 13$?",
+        "question": "¿Cuál es el resultado de la siguiente suma: $2 + 3$?",
         "options": [
-          "$x = 4$",
-          "$x = 3$",
-          "$x = 2$",
-          "$x = 1$"
-        ],
-        "answer": 0
-      },
-      {
-        "id": 2,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes funciones es lineal?",
-        "options": [
-          "$f(x) = 2x^2 + 3$",
-          "$f(x) = 4x + 1$",
-          "$f(x) = \sqrt{x} + 2$",
-          "$f(x) = x^3 - 1$"
+          "3",
+          "4",
+          "5",
+          "6"
         ],
         "answer": 1
       },
       {
+        "id": 2,
+        "type": "open_ended",
+        "question": "Resuelve la siguiente suma: $5 + 7$",
+        "options": null,
+        "answer": "12"
+      },
+      {
         "id": 3,
         "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes afirmaciones sobre funciones afines es verdadera?",
+        "question": "¿Cuál es el resultado de la siguiente suma: $8 + 2$?",
         "options": [
-          "Todas las funciones afines son lineales",
-          "Ninguna función afín es lineal",
-          "Algunas funciones afines son lineales",
-          "Las funciones afines no tienen pendiente"
+          "8",
+          "9",
+          "10",
+          "11"
         ],
         "answer": 2
       },
       {
         "id": 4,
-        "type": "multiple_choice",
-        "question": "¿Cuál de los siguientes es un ejemplo de pensamiento metacognitivo en matemáticas?",
-        "options": [
-          "Resolver una ecuación de segundo grado",
-          "Graficar una función cuadrática",
-          "Reflexionar sobre las estrategias utilizadas para resolver un problema",
-          "Calcular el área de un círculo"
-        ],
-        "answer": 2
+        "type": "open_ended",
+        "question": "Resuelve la siguiente suma: $3 + 4$",
+        "options": null,
+        "answer": "7"
       },
       {
         "id": 5,
         "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes es una característica de una función lineal?",
+        "question": "¿Cuál es el resultado de la siguiente suma: $6 + 1$?",
         "options": [
-          "Tiene una gráfica parabólica",
-          "Tiene una gráfica exponencial",
-          "Tiene una gráfica recta",
-          "Tiene una gráfica logarítmica"
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "answer": 3
+      },
+      {
+        "id": 6,
+        "type": "open_ended",
+        "question": "Resuelve la siguiente suma: $9 + 2$",
+        "options": null,
+        "answer": "11"
+      },
+      {
+        "id": 7,
+        "type": "multiple_choice",
+        "question": "¿Cuál es el resultado de la siguiente suma: $4 + 4$?",
+        "options": [
+          "6",
+          "7",
+          "8",
+          "9"
+        ],
+        "answer": 3
+      },
+      {
+        "id": 8,
+        "type": "open_ended",
+        "question": "Resuelve la siguiente suma: $7 + 3$",
+        "options": null,
+        "answer": "10"
+      },
+      {
+        "id": 9,
+        "type": "multiple_choice",
+        "question": "¿Cuál es el resultado de la siguiente suma: $1 + 6$?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
         ],
         "answer": 2
+      },
+      {
+        "id": 10,
+        "type": "open_ended",
+        "question": "Resuelve la siguiente suma: $2 + 8$",
+        "options": null,
+        "answer": "10"
       }
     ]
-
     this.format(this.excLANG)
 
     this.socketService.connectadConfirmed$.subscribe((estado) => {
@@ -241,7 +338,7 @@ export class AppComponent implements OnInit {
         }
 
         const parsed = isArray ? rawData : this.extractExercisesFromText(rawData?.toString() || '');
-        const limited = parsed.slice(0, this.formData.quantity_exercise);
+        const limited = parsed.slice(0, this.formData?.quantity_exercise);
 
         if (!isArray) {
           this.format(limited);
@@ -265,23 +362,25 @@ export class AppComponent implements OnInit {
   }
 
   format(limited: Exercise[]) {
-    for (const x of limited) {
-      if (x.options && x.options.some((opt: string) => opt.includes('\\(') || opt.includes('\\text'))) {
-        x.options = x.options.map((opt: string) =>
-          opt
+    if (limited && limited.length > 0) {
+      for (const x of limited) {
+        if (x.options && x.options.some((opt: string) => opt.includes('\\(') || opt.includes('\\text'))) {
+          x.options = x.options.map((opt: string) =>
+            opt
+              .replace(/\\\(/g, '')
+              .replace(/\\\)/g, '')
+              .replace(/\\text\{(.*?)\}/g, '$1')
+              .trim()
+          );
+        }
+
+        if (x.question.includes('\\(') || x.question.includes('\\text')) {
+          x.question = x.question
             .replace(/\\\(/g, '')
             .replace(/\\\)/g, '')
             .replace(/\\text\{(.*?)\}/g, '$1')
-            .trim()
-        );
-      }
-
-      if (x.question.includes('\\(') || x.question.includes('\\text')) {
-        x.question = x.question
-          .replace(/\\\(/g, '')
-          .replace(/\\\)/g, '')
-          .replace(/\\text\{(.*?)\}/g, '$1')
-          .trim();
+            .trim();
+        }
       }
     }
 

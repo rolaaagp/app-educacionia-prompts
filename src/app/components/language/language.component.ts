@@ -97,6 +97,7 @@ export class LanguageComponent {
       } else if (Array.isArray(data)) {
         evaluacion = {
           correcta: false,
+          frase_motivacional: "",
           pasos: data
         };
       } else {
@@ -112,31 +113,21 @@ export class LanguageComponent {
 
     } catch (err) {
       console.error("Error al parsear evaluación:", err);
-      return { correcta: false, pasos: [] };
+      return { correcta: false, frase_motivacional: "", pasos: [] };
     }
   }
 
-
   renderEvaluacion(evaluacion: Evaluacion): string {
-    const header = evaluacion.correcta ? `
-      <span>
-        Creo que tu respuesta es correcta, ¡bien hecho!.
-      </span>
-    ` :
-      ` <span>
-          Creo que tu respuesta es incorrecta, no te preocupes. 
-          </span>
-          <br>
-          <span>Revisemos cómo se resuelve paso a paso.</span>
-      `
-    return evaluacion.pasos
+    const header = evaluacion.correcta
+      ? `<span>Creo que tu respuesta es correcta, ¡bien hecho!.</span><br><br>`
+      : `<span>Creo que tu respuesta es incorrecta, no te preocupes.</span><br><span>Revisemos cómo se resuelve paso a paso.</span><br><br>`;
+
+    const pasosHTML = evaluacion.pasos
       .map((paso, idx) => {
-        const explicacion = paso.explicacion
-        const mejora = paso.en_que_debo_mejorar
+        const explicacion = paso.explicacion;
+        const mejora = paso.en_que_debo_mejorar;
         return `
         <div class="mb-3">
-          ${header}
-          <br>
           <strong>Paso ${idx + 1})</strong><br>
           <span>${explicacion}</span><br>
           <em>Consejo:</em> ${mejora}
@@ -144,6 +135,12 @@ export class LanguageComponent {
       `;
       })
       .join('');
+
+    const frase = evaluacion.frase_motivacional
+      ? `<div class="mt-4">${evaluacion.frase_motivacional}</div>`
+      : `<div class="mt-4">Vas por buen camino, solo falta afinar algunos detalles.</div>`;
+
+    return header + pasosHTML + frase;
   }
 
 }
