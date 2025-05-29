@@ -42,6 +42,22 @@ export class MathComponent implements AfterViewChecked, OnChanges {
   @Input() exercises!: Exercise[];
   @Input() course!: '1M' | '2M' | '3M' | '4M';
   @Input() subject!: 'LANG' | 'MATH';
+
+
+
+
+
+
+  @ViewChildren('canvasElement') canvasElements!: QueryList<ElementRef>;
+  private canvasCtx: CanvasRenderingContext2D[] = [];
+  private isDrawing: boolean[] = [];
+
+
+
+
+
+
+
   mainService = inject(MainService);
 
   preguntaRespondida: boolean[] = [];
@@ -54,32 +70,104 @@ export class MathComponent implements AfterViewChecked, OnChanges {
   needsTypeset = false;
 
   @ViewChildren('questionEl') questionElements!: QueryList<ElementRef>;
+  @ViewChildren('optionEl') optionElements!: QueryList<ElementRef>;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['exercises'] || changes['course'] || changes['subject']) {
+    if (changes['exercises']) {
       this.needsTypeset = true;
     }
   }
 
+
   ngAfterViewInit() {
     this.questionElements.forEach((el, i) => {
-      const content = this.replaceLatex(this.exercises[i].question);
-      el.nativeElement.innerHTML = content;
+      const wrapped = this.wrapMathExpressions(this.exercises[i].question);
+      const html = this.replaceLatex(wrapped);
+      el.nativeElement.innerHTML = html;
     });
+
+
+    this.canvasElements.forEach((canvasRef, i) => {
+      const ctx = canvasRef.nativeElement.getContext('2d');
+      if (ctx) {
+        this.canvasCtx[i] = ctx;
+      }
+    });
+
     this.updateMathJax();
   }
 
   ngAfterViewChecked(): void {
-    if (this.questionElements?.length && this.exercises?.length) {
+    if (this.needsTypeset && this.questionElements?.length && this.exercises?.length) {
       this.questionElements.forEach((el, i) => {
-        const html = this.replaceLatex(this.exercises[i].question);
+        const html = this.replaceLatex(this.wrapMathExpressions(this.exercises[i].question));
         el.nativeElement.innerHTML = html;
       });
+
+      let index = 0;
+      this.exercises.forEach((e) => {
+        if (e.options) {
+          e.options.forEach((opt, j) => {
+            const el = this.optionElements.get(index);
+            if (el) {
+              const processed = this.replaceLatex(this.wrapMathExpressions(opt));
+              el.nativeElement.innerHTML = processed;
+            }
+            index++;
+          });
+        }
+      });
+
       if (typeof MathJax !== 'undefined') {
-        MathJax.typesetPromise();
+        MathJax.typesetPromise().catch((err: any) => console.error('MathJax render error', err));
       }
+
+      this.needsTypeset = false;
     }
   }
+
+
+
+  startDrawing(event: MouseEvent, index: number) {
+    this.isDrawing[index] = true;
+    const ctx = this.canvasCtx[index];
+    const canvas = this.canvasElements.get(index)?.nativeElement;
+    ctx.beginPath();
+    ctx.moveTo(event.offsetX, event.offsetY);
+  }
+
+  draw(event: MouseEvent, index: number) {
+    if (!this.isDrawing[index]) return;
+    const ctx = this.canvasCtx[index];
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+  }
+
+  stopDrawing(index: number) {
+    this.isDrawing[index] = false;
+  }
+
+  clearCanvas(index: number) {
+    const canvas = this.canvasElements.get(index)?.nativeElement;
+    const ctx = this.canvasCtx[index];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  handleImageUpload(event: any, index: number) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const ctx = this.canvasCtx[index];
+        ctx.drawImage(img, 0, 0, 300, 200);
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
 
   private updateMathJax() {
     if (typeof MathJax !== 'undefined') {
@@ -163,14 +251,114 @@ export class MathComponent implements AfterViewChecked, OnChanges {
       .join('');
   }
 
+
   replaceLatex(input: string): string {
+    if (!input || typeof input !== 'string') return input;
+
+    const unitReplacements: [RegExp, string][] = [
+      [/\b(\d+(?:\.\d+)?)\s*m\/s\b/g, '$1\\,\\text{m/s}'],
+      [/\b(\d+(?:\.\d+)?)\s*km\/h\b/g, '$1\\,\\text{km/h}'],
+      [/\b(\d+(?:\.\d+)?)\s*cm\/s\b/g, '$1\\,\\text{cm/s}'],
+      [/\b(\d+(?:\.\d+)?)\s*ms⁻¹\b/g, '$1\\,\\text{m\\cdot s^{-1}}'],
+      [/\b(\d+(?:\.\d+)?)\s*kg\b/g, '$1\\,\\text{kg}'],
+      [/\b(\d+(?:\.\d+)?)\s*g\b/g, '$1\\,\\text{g}'],
+      [/\b(\d+(?:\.\d+)?)\s*m\b/g, '$1\\,\\text{m}'],
+      [/\b(\d+(?:\.\d+)?)\s*cm\b/g, '$1\\,\\text{cm}'],
+      [/\b(\d+(?:\.\d+)?)\s*mm\b/g, '$1\\,\\text{mm}'],
+      [/\b(\d+(?:\.\d+)?)\s*s\b/g, '$1\\,\\text{s}'],
+      [/\b(\d+(?:\.\d+)?)\s*%\b/g, '$1\\,\\%'],
+      [/\b(\d+(?:\.\d+)?)\s*°\b/g, '$1\\,^{\\circ}']
+    ];
+
     return input.replace(/\[\[(.+?)\]\]/g, (_match, expr) => {
-      const cleaned = expr
-        .replace(/(?<!\\)(frac|sqrt|pm|cdot|leq|geq|neq|infty|left|right|sin|cos|tan|log|ln|text)/g, '\\$1')
-        .replace(/([0-9])\s*\(/g, '$1\\cdot(');
+      let cleaned = expr
+        .replace(/(?<!\\)(frac|times|sqrt|pm|cdot|leq|geq|neq|infty|left|right|sin|cos|tan|log|ln|text|pi)/g, '\\$1')
+        .replace(/([0-9])\s*\(/g, '$1\\cdot(')
+        .trim();
+
+      for (const [pattern, replacement] of unitReplacements) {
+        cleaned = cleaned.replace(pattern, replacement);
+      }
+
       return `\\(${cleaned}\\)`;
     });
   }
+
+
+
+
+  wrapMathExpressions(text: string): string {
+    if (typeof text !== 'string') return text;
+
+    // Si el texto completo es una ecuación simple como y = 2x + 3
+    const fullEquation = /^\s*[a-zA-Z]+\s*=\s*[-+*/^()\d\s.a-zA-Z]+$/;
+    if (fullEquation.test(text.trim())) {
+      return text.includes('[[') ? text : `[[${text.trim()}]]`;
+    }
+
+
+    // Si todo el texto es matemático, lo envolvemos completo
+    const fullMathPattern = /^[\d\s\+\-\*\/\^=π°%cmkgms\/\.\(\)]+$/i;
+    if (fullMathPattern.test(text.trim())) {
+      return text.includes('[[') ? text : `[[${text.trim()}]]`;
+    }
+
+    // Reglas específicas
+    const rules: { name: string; pattern: RegExp }[] = [
+      { name: 'operacion_simple', pattern: /\b\d+\s*[\+\-\*\/\^]\s*\d+\b/g },
+      { name: 'ecuacion', pattern: /\b[a-zA-Z]+\s*=\s*[^,.?\n]+/g },
+      { name: 'termino_con_variable', pattern: /\b\d+(?:\.\d+)?\s*[a-zA-Z]+\b/g },
+      { name: 'funcion_matematica', pattern: /\b[a-zA-Z]+\([^)]+\)/g },
+      { name: 'unidad_matematica', pattern: /\b\d+(?:\.\d+)?\s*(cm²|cm³|π|°|%|cm|m|km|mm)\b/g },
+      { name: 'unidad_fisica', pattern: /\b\d+(?:\.\d+)?\s*(m\/s|km\/h|cm\/s|ms⁻¹|m·s⁻¹|kg|g|s)\b/g },
+      { name: 'constante_pi', pattern: /\bπ\b/g },
+      { name: 'potencia', pattern: /\b\d+\s*\^\s*\d+\b/g },
+      { name: 'fraccion_simple', pattern: /\b\d+\/\d+\b/g },
+      { name: 'porcentaje', pattern: /\b\d+(?:\.\d+)?\s*%\b/g },
+      { name: 'desigualdad', pattern: /[<>]=?\s*\d+/g },
+
+      // NUEVAS REGLAS
+      { name: 'valor_absoluto', pattern: /\|[^|]+\|/g }, // |x + 2|
+      { name: 'raiz_cuadrada_simbolica', pattern: /√\d+/g }, // √16
+      { name: 'logaritmo_base', pattern: /\blog_\d+\([^)]+\)/g }, // log_2(8)
+      { name: 'producto_parentesis', pattern: /\b\d+\s*\(\s*[a-zA-Z\d+\-*\/^\s]+\s*\)/g }, // 2(x + 3)
+      { name: 'intervalo_numerico', pattern: /\[\s*\d+\s*,\s*\d+\s*\]/g }, // [1, 5]
+      { name: 'intervalo_abierto', pattern: /\(\s*\d+\s*,\s*\d+\s*\)/g }, // (1, 5)
+      { name: 'notacion_cientifica', pattern: /\b\d+(?:\.\d+)?\s*×\s*10\^[-+]?\d+\b/g }, // 1.2 × 10^3
+      { name: 'potencia_letra', pattern: /\b[a-zA-Z]+\s*\^\s*\d+\b/g }, // x^2
+      { name: 'expresion_con_pi', pattern: /\b\d+π\b/g }, // 2π
+      { name: 'exponente_decimal', pattern: /\b\d+(?:\.\d+)?\^\d+\b/g }, // 1.5^2
+      { name: 'inecuacion_compuesta', pattern: /\b[a-zA-Z\d\s\+\-\*\/]+\s*[<>]=?\s*[a-zA-Z\d\s\+\-\*\/]+\b/g },
+      { name: 'sistema_ecuaciones', pattern: /([a-zA-Z]+\s*=\s*[^,\n]+)[\r\n]+([a-zA-Z]+\s*=\s*[^,\n]+)/g },
+      { name: 'raiz_general', pattern: /(?:∛|⁴√|√)\s*\(?[a-zA-Z\d\s\+\-\*\/]+\)?/g },
+      { name: 'trig_funcion_compuesta', pattern: /\b(sin|cos|tan)\s*\(\s*[a-zA-Z\d\s\+\-\*\/\^π]+\s*\)/g },
+      { name: 'funcion_compuesta', pattern: /\b[a-zA-Z]+\s*\(\s*[a-zA-Z]+\s*\(\s*[a-zA-Z\d\s\+\-\*\/]+\s*\)\s*\)/g },
+      { name: 'notacion_funcional', pattern: /\b[a-zA-Z]:\s*ℝ\s*→\s*ℝ\b/g },
+      { name: 'pertenencia_conjunto', pattern: /\b[a-zA-Z]+\s*∈\s*ℝ|ℕ|ℤ|ℚ\b/g },
+      { name: 'sumatoria', pattern: /∑_\{\s*[a-zA-Z]=\d+\s*\}\^\{\s*[a-zA-Z\d]+\s*\}\s*[a-zA-Z\d\+\-\*\/\^]+\b/g },
+      { name: 'productoria', pattern: /∏_\{\s*[a-zA-Z]=\d+\s*\}\^\{\s*[a-zA-Z\d]+\s*\}\s*[a-zA-Z\d\+\-\*\/\^]+\b/g },
+      { name: 'notacion_conjunto', pattern: /\{\s*[a-zA-Z]+\s*∈\s*ℝ\s*\|\s*[a-zA-Z\d\s<>=]+\s*\}/g }
+
+    ];
+
+
+    let result = text;
+
+    for (const rule of rules) {
+      result = result.replace(rule.pattern, (match) => {
+        return match.includes('[[') ? match : `[[${match.trim()}]]`;
+      });
+    }
+
+    return result;
+  }
+
+
+
+
+
+
+
 
   getOptionLetter(index: number): string {
     return String.fromCharCode(65 + index);

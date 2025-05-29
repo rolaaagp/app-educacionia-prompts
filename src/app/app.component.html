@@ -55,7 +55,9 @@
       </select>
     </div>
     <div>
-      <label for="typeQuestions" class="block text-sm font-semibold text-blue-700"
+      <label
+        for="typeQuestions"
+        class="block text-sm font-semibold text-blue-700"
         >Las preguntas deben ser de respuestas</label
       >
       <select
@@ -109,11 +111,14 @@
         (click)="solicitar()"
         class="px-6 cursor-pointer py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
       >
-        Solicitar
+        Generar
       </button>
-      <span *ngIf="loading" class="text-sm text-red-500 font-medium"
-        >Cargando...</span
+      <span
+        *ngIf="loading"
+        class="text-sm text-red-500 font-medium animate-pulse"
       >
+        Generando...
+      </span>
     </div>
   </form>
 

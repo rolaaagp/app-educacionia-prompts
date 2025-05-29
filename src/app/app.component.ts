@@ -43,119 +43,7 @@ export class AppComponent implements OnInit {
   };
 
   excLANG!: Exercise[];
-  excMATH: Exercise[] = [
-    {
-      "id": 1,
-      "type": "multiple_choice",
-      "question": "¿Cuál es la ecuación de una función lineal que pasa por los puntos (2, 3) y (4, 7)?",
-      "options": [
-        "[[y = 2x + 1]]",
-        "[[y = 2x - 1]]",
-        "[[y = 4x - 5]]",
-        "[[y = 4x + 3]]"
-      ],
-      "answer": 2
-    },
-    {
-      "id": 2,
-      "type": "multiple_choice",
-      "question": "Si una magnitud A es directamente proporcional a una magnitud B, y A = 6 cuando B = 3, ¿cuál es el valor de A cuando B = 9?",
-      "options": ["[[A = 18]]", "[[A = 12]]", "[[A = 9]]", "[[A = 6]]"],
-      "answer": 0
-    },
-    {
-      "id": 3,
-      "type": "multiple_choice",
-      "question": "Un recipiente en forma de cilindro tiene un radio de [[5 text{cm}]] y una altura de [[10 text{cm}]]. ¿Cuál es su volumen?",
-      "options": [
-        "[[125 pi text{cm}^3]]",
-        "[[250 pi text{cm}^3]]",
-        "[[500 pi text{cm}^3]]",
-        "[[1000 pi text{cm}^3]]"
-      ],
-      "answer": 1
-    },
-    {
-      "id": 4,
-      "type": "multiple_choice",
-      "question": "Si una función lineal pasa por los puntos (2, 3) y (4, 7), ¿cuál es su ecuación?",
-      "options": [
-        "[[y = 2x + 1]]",
-        "[[y = 2x - 1]]",
-        "[[y = 4x - 5]]",
-        "[[y = 4x + 3]]"
-      ],
-      "answer": 2
-    },
-    {
-      "id": 5,
-      "type": "multiple_choice",
-      "question": "En una urna hay 5 bolas blancas y 3 bolas negras. Si se extrae una bola al azar, ¿cuál es la probabilidad de que sea blanca?",
-      "options": [
-        "[[frac{3}{8}]]",
-        "[[frac{5}{8}]]",
-        "[[frac{3}{5}]]",
-        "[[frac{5}{3}]]"
-      ],
-      "answer": 1
-    },
-    {
-      "id": 6,
-      "type": "multiple_choice",
-      "question": "¿Cuál es la solución de la ecuación de segundo grado [[x^2 - 5x + 6 = 0]]?",
-      "options": [
-        "[[x = 1, x = 4]]",
-        "[[x = 2, x = 3]]",
-        "[[x = -2, x = -3]]",
-        "[[x = 1, x = -4]]"
-      ],
-      "answer": 1
-    },
-    {
-      "id": 7,
-      "type": "multiple_choice",
-      "question": "Si una magnitud A es inversamente proporcional a una magnitud B, y A = 12 cuando B = 3, ¿cuál es el valor de A cuando B = 6?",
-      "options": ["[[A = 6]]", "[[A = 12]]", "[[A = 24]]", "[[A = 36]]"],
-      "answer": 0
-    },
-    {
-      "id": 8,
-      "type": "multiple_choice",
-      "question": "Un triángulo rectángulo tiene un cateto de [[6 text{cm}]] y la hipotenusa mide [[10 text{cm}]]. ¿Cuál es la longitud del otro cateto?",
-      "options": [
-        "[[4 text{cm}]]",
-        "[[8 text{cm}]]",
-        "[[12 text{cm}]]",
-        "[[16 text{cm}]]"
-      ],
-      "answer": 0
-    },
-    {
-      "id": 9,
-      "type": "multiple_choice",
-      "question": "Si una función cuadrática pasa por los puntos (0, 2), (2, 6) y (4, 2), ¿cuál es su ecuación?",
-      "options": [
-        "[[y = x^2 - 2x + 2]]",
-        "[[y = x^2 + 2x - 2]]",
-        "[[y = -x^2 + 2x + 2]]",
-        "[[y = -x^2 - 2x + 2]]"
-      ],
-      "answer": 2
-    },
-    {
-      "id": 10,
-      "type": "multiple_choice",
-      "question": "En un dado de 6 caras, ¿cuál es la probabilidad de obtener un número mayor que 4?",
-      "options": [
-        "[[frac{1}{6}]]",
-        "[[frac{2}{6}]]",
-        "[[frac{3}{6}]]",
-        "[[frac{4}{6}]]"
-      ],
-      "answer": 2
-    }
-  ]
-
+  excMATH: Exercise[] = [];
 
   t: string = "";
 
@@ -168,6 +56,128 @@ export class AppComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    // this.excMATH = [
+    //   {
+    //     "id": 1,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es el valor de x en la ecuación 2x + 5 = 15?",
+    //     "options": [
+    //       "5",
+    //       "7",
+    //       "10",
+    //       "15"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 2,
+    //     "type": "multiple_choice",
+    //     "question": "Si una recta pasa por los puntos (2, 3) y (4, 7), ¿cuál es su pendiente?",
+    //     "options": [
+    //       "1",
+    //       "2",
+    //       "3",
+    //       "4"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 3,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál de las siguientes funciones es lineal?",
+    //     "options": [
+    //       "f(x) = x^2",
+    //       "f(x) = 3x + 2",
+    //       "f(x) = sin(x)",
+    //       "f(x) = log(x)"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 4,
+    //     "type": "multiple_choice",
+    //     "question": "Si un objeto cae desde una altura de 100 metros, ¿cuál es su velocidad al llegar al suelo?",
+    //     "options": [
+    //       "10 m/s",
+    //       "20 m/s",
+    //       "30 m/s",
+    //       "40 m/s"
+    //     ],
+    //     "answer": 2
+    //   },
+    //   {
+    //     "id": 5,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es la probabilidad de obtener un número par al lanzar un dado?",
+    //     "options": [
+    //       "1/2",
+    //       "1/3",
+    //       "1/4",
+    //       "1/6"
+    //     ],
+    //     "answer": 0
+    //   },
+    //   {
+    //     "id": 6,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es el área de un círculo con radio de 5 cm?",
+    //     "options": [
+    //       "25π cm²",
+    //       "50π cm²",
+    //       "75π cm²",
+    //       "100π cm²"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 7,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es la ecuación de una recta que pasa por los puntos (2, 3) y (4, 7)?",
+    //     "options": [
+    //       "y = 2x + 1",
+    //       "y = 2x + 3",
+    //       "y = 4x - 1",
+    //       "y = 4x - 3"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 8,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es la razón de proporcionalidad entre dos magnitudes si la primera se duplica cuando la segunda se triplica?",
+    //     "options": [
+    //       "1/3",
+    //       "1/2",
+    //       "2/3",
+    //       "3/2"
+    //     ],
+    //     "answer": 3
+    //   },
+    //   {
+    //     "id": 9,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es el valor de x en la ecuación 3x - 7 = 14?",
+    //     "options": [
+    //       "7",
+    //       "9",
+    //       "10",
+    //       "21"
+    //     ],
+    //     "answer": 1
+    //   },
+    //   {
+    //     "id": 10,
+    //     "type": "multiple_choice",
+    //     "question": "¿Cuál es la probabilidad de obtener una cara al lanzar una moneda?",
+    //     "options": [
+    //       "1/4",
+    //       "1/3",
+    //       "1/2",
+    //       "2/3"
+    //     ],
+    //     "answer": 2
+    //   }
+    // ];
     this.socketService.connectadConfirmed$.subscribe((estado) => {
       console.log("WebSocket:", estado); // o usa un toast, alert, etc.
     });
@@ -215,7 +225,7 @@ export class AppComponent implements OnInit {
       next: (res) => {
         const rawData = res.data;
         const isArray = Array.isArray(rawData);
-
+        console.log({ rawData });
         if (!isArray && retryCount < 3) {
           const text = rawData?.toString().toLowerCase() || '';
           if (text.startsWith("sorry") || text.startsWith("lo siento")) {
@@ -243,6 +253,7 @@ export class AppComponent implements OnInit {
       },
       error: (err) => {
         console.error("Error al solicitar ejercicios:", err);
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
