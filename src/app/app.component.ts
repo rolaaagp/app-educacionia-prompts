@@ -8,6 +8,7 @@ import { MathComponent } from "./components/math/math.component";
 import { CommonModule } from '@angular/common';
 import { IBody, MainService } from '../services/main.services';
 import { SkeletonComponent } from "./components/skeleton/skeleton.component";
+import { retry } from 'rxjs';
 
 
 export type Exercise = {
@@ -217,7 +218,7 @@ export class AppComponent implements OnInit {
   solicitar(retryCount: number = 0) {
     this.loading = true;
     const form = {...this.formData, contents: this.formData.contents.toLowerCase()}
-    this.mainService.generateExercises(form).subscribe({
+    this.mainService.generateExercises(form).pipe(retry(5)).subscribe({
       next: (res) => {
         let rawData = res.data;
         if (rawData?.rawData && typeof rawData.rawData === 'string') {
