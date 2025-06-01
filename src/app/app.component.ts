@@ -57,121 +57,128 @@ export class AppComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // this.excLANG = [
-    //   {
-    //     "id": 1,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes palabras o expresiones proviene de una lengua originaria y se usa en el español de Chile?",
-    //     "options": [
-    //       "\\(\\text{Chao}\\)",
-    //       "\\(\\text{Cachai}\\)",
-    //       "\\(\\text{Bacán}\\)",
-    //       "\\(\\text{Pololo}\\)"
-    //     ],
-    //     "answer": 3
-    //   },
-    //   {
-    //     "id": 2,
-    //     "type": "open_ended",
-    //     "question": "Investiga y describe una jerga generacional que se use en tu comunidad. Explica su origen, significado y contexto de uso.",
-    //     "options": null,
-    //     "answer": ""
-    //   },
-    //   {
-    //     "id": 3,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes expresiones provendría más probablemente de un pueblo migrante que ha llegado a Chile?",
-    //     "options": [
-    //       "\\(\\text{Güena}\\)",
-    //       "\\(\\text{Cabro}\\)",
-    //       "\\(\\text{Weón}\\)",
-    //       "\\(\\text{Onda}\\)"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 4,
-    //     "type": "open_ended",
-    //     "question": "Analiza el siguiente fragmento y explica cómo se relacionan las palabras \"aliado\", \"mancomunada\" y \"convenio\".",
-    //     "options": null,
-    //     "answer": ""
-    //   },
-    //   {
-    //     "id": 5,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes afirmaciones sobre el español de Chile es correcta?",
-    //     "options": [
-    //       "\\(\\text{Es una variante completamente diferente al español estándar}\\)",
-    //       "\\(\\text{Tiene un vocabulario básico fundamental común con otras variantes}\\)",
-    //       "\\(\\text{Se habla de forma muy distinta a otras regiones de Hispanoamérica}\\)",
-    //       "\\(\\text{No comparte la misma morfosintaxis que el español estándar}\\)"
-    //     ],
-    //     "answer": 2
-    //   }
-    // ]
-
-    // this.excMATH = [
-    //   {
-    //     "id": 1,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál es la solución de la ecuación $2x + 5 = 13$?",
-    //     "options": [
-    //       "$x = 4$",
-    //       "$x = 3$",
-    //       "$x = 2$",
-    //       "$x = 1$"
-    //     ],
-    //     "answer": 0
-    //   },
-    //   {
-    //     "id": 2,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes funciones es lineal?",
-    //     "options": [
-    //       "$f(x) = 2x^2 + 3$",
-    //       "$f(x) = 4x + 1$",
-    //       "$f(x) = \sqrt{x} + 2$",
-    //       "$f(x) = x^3 - 1$"
-    //     ],
-    //     "answer": 1
-    //   },
-    //   {
-    //     "id": 3,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes afirmaciones sobre funciones afines es verdadera?",
-    //     "options": [
-    //       "Todas las funciones afines son lineales",
-    //       "Ninguna función afín es lineal",
-    //       "Algunas funciones afines son lineales",
-    //       "Las funciones afines no tienen pendiente"
-    //     ],
-    //     "answer": 2
-    //   },
-    //   {
-    //     "id": 4,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de los siguientes es un ejemplo de pensamiento metacognitivo en matemáticas?",
-    //     "options": [
-    //       "Resolver una ecuación de segundo grado",
-    //       "Graficar una función cuadrática",
-    //       "Reflexionar sobre las estrategias utilizadas para resolver un problema",
-    //       "Calcular el área de un círculo"
-    //     ],
-    //     "answer": 2
-    //   },
-    //   {
-    //     "id": 5,
-    //     "type": "multiple_choice",
-    //     "question": "¿Cuál de las siguientes es una característica de una función lineal?",
-    //     "options": [
-    //       "Tiene una gráfica parabólica",
-    //       "Tiene una gráfica exponencial",
-    //       "Tiene una gráfica recta",
-    //       "Tiene una gráfica logarítmica"
-    //     ],
-    //     "answer": 2
-    //   }
-    // ]
+    this.excMATH = [
+      {
+        "id": 1234,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes figuras geométricas tiene 4 lados iguales y 4 ángulos rectos?",
+        "options": [
+          "[math]\\square[/math]",
+          "[math]\\triangle[/math]",
+          "[math]\\circle[/math]",
+          "[math]\\rhombus[/math]"
+        ],
+        "answer": 0
+      },
+      {
+        "id": 5678,
+        "type": "multiple_choice",
+        "question": "Si un punto tiene coordenadas [math](3, 4)[/math], ¿cuál es su distancia al origen de coordenadas?",
+        "options": [
+          "[math]\\sqrt{25}[/math]",
+          "[math]\\sqrt{13}[/math]",
+          "[math]\\sqrt{5}[/math]",
+          "[math]\\sqrt{10}[/math]"
+        ],
+        "answer": 1
+      },
+      {
+        "id": 9012,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes afirmaciones sobre la recta perpendicular a otra recta es verdadera?",
+        "options": [
+          "Forman un ángulo de 45 grados",
+          "Forman un ángulo de 60 grados",
+          "Forman un ángulo de 90 grados",
+          "Forman un ángulo de 180 grados"
+        ],
+        "answer": 2
+      },
+      {
+        "id": 3456,
+        "type": "multiple_choice",
+        "question": "Si un triángulo tiene dos lados iguales, ¿cómo se llama?",
+        "options": [
+          "Isósceles",
+          "Equilátero",
+          "Escaleno",
+          "Rectángulo"
+        ],
+        "answer": 0
+      },
+      {
+        "id": 7890,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes figuras geométricas tiene todos sus lados y ángulos iguales?",
+        "options": [
+          "[math]\\square[/math]",
+          "[math]\\triangle[/math]",
+          "[math]\\circle[/math]",
+          "[math]\\rhombus[/math]"
+        ],
+        "answer": 1
+      },
+      {
+        "id": 2345,
+        "type": "multiple_choice",
+        "question": "Si un punto tiene coordenadas [math](2, -3)[/math], ¿en qué cuadrante se encuentra?",
+        "options": [
+          "Primer cuadrante",
+          "Segundo cuadrante",
+          "Tercer cuadrante",
+          "Cuarto cuadrante"
+        ],
+        "answer": 3
+      },
+      {
+        "id": 6789,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes figuras geométricas tiene 3 lados y 3 ángulos?",
+        "options": [
+          "[math]\\square[/math]",
+          "[math]\\triangle[/math]",
+          "[math]\\circle[/math]",
+          "[math]\\rhombus[/math]"
+        ],
+        "answer": 1
+      },
+      {
+        "id": 1357,
+        "type": "multiple_choice",
+        "question": "Si un punto tiene coordenadas [math](0, 5)[/math], ¿en qué cuadrante se encuentra?",
+        "options": [
+          "Primer cuadrante",
+          "Segundo cuadrante",
+          "Tercer cuadrante",
+          "Cuarto cuadrante"
+        ],
+        "answer": 1
+      },
+      {
+        "id": 2468,
+        "type": "multiple_choice",
+        "question": "¿Cuál de las siguientes figuras geométricas tiene 4 lados iguales y 4 ángulos iguales?",
+        "options": [
+          "[math]\\square[/math]",
+          "[math]\\triangle[/math]",
+          "[math]\\circle[/math]",
+          "[math]\\rhombus[/math]"
+        ],
+        "answer": 0
+      },
+      {
+        "id": 3579,
+        "type": "multiple_choice",
+        "question": "Si un punto tiene coordenadas [math](-3, 0)[/math], ¿en qué cuadrante se encuentra?",
+        "options": [
+          "Primer cuadrante",
+          "Segundo cuadrante",
+          "Tercer cuadrante",
+          "Cuarto cuadrante"
+        ],
+        "answer": 2
+      }
+    ]
 
     this.format(this.excLANG)
 
@@ -217,7 +224,7 @@ export class AppComponent implements OnInit {
 
   solicitar(retryCount: number = 0) {
     this.loading = true;
-    const form = {...this.formData, contents: this.formData.contents.toLowerCase()}
+    const form = { ...this.formData, contents: this.formData.contents.toLowerCase() }
     this.mainService.generateExercises(form).pipe(retry(5)).subscribe({
       next: (res) => {
         let rawData = res.data;

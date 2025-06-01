@@ -44,7 +44,7 @@
               class="mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
             />
             <span class="text-gray-700">
-              <strong>{{ getOptionLetter(j) }}.</strong>
+              <strong class="mr-3">{{ getOptionLetter(j) }}.</strong>
               <span #optionEl></span>
             </span>
           </label>
@@ -56,7 +56,7 @@
           rows="3"
           [disabled]="preguntaRespondida[i]"
           [(ngModel)]="userResponses[i]"
-          placeholder="Escribe tu respuesta (opcional)"
+          placeholder="Escribe tu respuesta"
           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
         ></textarea>
 
