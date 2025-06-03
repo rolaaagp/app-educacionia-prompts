@@ -117,11 +117,12 @@ export class LanguageComponent {
       ? `<span>Creo que tu respuesta es correcta, ¡bien hecho!.</span><br><br>`
       : `<span>Creo que tu respuesta es incorrecta, no te preocupes.</span><br><span>Revisemos cómo se resuelve paso a paso.</span><br><br>`;
 
-    const pasosHTML = evaluacion.pasos
-      .map((paso, idx) => {
-        const explicacion = paso.explicacion;
-        const mejora = paso.en_que_debo_mejorar;
-        return `
+    const pasosHTML = evaluacion.pasos.map((paso, idx) => {
+     
+      console.log({ paso })
+      const explicacion = paso.explicacion;
+      const mejora = paso.en_que_debo_mejorar;
+      return `
         <div class="mb-3">
           <strong>Paso ${idx + 1})</strong><br>
           <span>${explicacion}</span><br>
@@ -129,7 +130,7 @@ export class LanguageComponent {
           <em class="mt-3">Consejo:</em> ${mejora}
         </div>
       `;
-      })
+    })
       .join('');
 
     const frase = evaluacion.frase_motivacional

@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     subject: 'MATH',
     contents: 'funciones, ecuaciones, proporcionalidad, geometría o probabilidades',
     quantity_exercise: 1,
-    typeQuestions: "mix"
+    typeQuestions: "dev"
   };
 
   excLANG!: Exercise[];
@@ -58,127 +58,102 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.excMATH = [
-      {
-        "id": 1234,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes figuras geométricas tiene 4 lados iguales y 4 ángulos rectos?",
-        "options": [
-          "[math]\\square[/math]",
-          "[math]\\triangle[/math]",
-          "[math]\\circle[/math]",
-          "[math]\\rhombus[/math]"
-        ],
-        "answer": 0
-      },
-      {
-        "id": 5678,
-        "type": "multiple_choice",
-        "question": "Si un punto tiene coordenadas [math](3, 4)[/math], ¿cuál es su distancia al origen de coordenadas?",
-        "options": [
-          "[math]\\sqrt{25}[/math]",
-          "[math]\\sqrt{13}[/math]",
-          "[math]\\sqrt{5}[/math]",
-          "[math]\\sqrt{10}[/math]"
-        ],
-        "answer": 1
-      },
-      {
-        "id": 9012,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes afirmaciones sobre la recta perpendicular a otra recta es verdadera?",
-        "options": [
-          "Forman un ángulo de 45 grados",
-          "Forman un ángulo de 60 grados",
-          "Forman un ángulo de 90 grados",
-          "Forman un ángulo de 180 grados"
-        ],
-        "answer": 2
-      },
-      {
-        "id": 3456,
-        "type": "multiple_choice",
-        "question": "Si un triángulo tiene dos lados iguales, ¿cómo se llama?",
-        "options": [
-          "Isósceles",
-          "Equilátero",
-          "Escaleno",
-          "Rectángulo"
-        ],
-        "answer": 0
-      },
-      {
-        "id": 7890,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes figuras geométricas tiene todos sus lados y ángulos iguales?",
-        "options": [
-          "[math]\\square[/math]",
-          "[math]\\triangle[/math]",
-          "[math]\\circle[/math]",
-          "[math]\\rhombus[/math]"
-        ],
-        "answer": 1
-      },
-      {
-        "id": 2345,
-        "type": "multiple_choice",
-        "question": "Si un punto tiene coordenadas [math](2, -3)[/math], ¿en qué cuadrante se encuentra?",
-        "options": [
-          "Primer cuadrante",
-          "Segundo cuadrante",
-          "Tercer cuadrante",
-          "Cuarto cuadrante"
-        ],
-        "answer": 3
-      },
-      {
-        "id": 6789,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes figuras geométricas tiene 3 lados y 3 ángulos?",
-        "options": [
-          "[math]\\square[/math]",
-          "[math]\\triangle[/math]",
-          "[math]\\circle[/math]",
-          "[math]\\rhombus[/math]"
-        ],
-        "answer": 1
-      },
-      {
-        "id": 1357,
-        "type": "multiple_choice",
-        "question": "Si un punto tiene coordenadas [math](0, 5)[/math], ¿en qué cuadrante se encuentra?",
-        "options": [
-          "Primer cuadrante",
-          "Segundo cuadrante",
-          "Tercer cuadrante",
-          "Cuarto cuadrante"
-        ],
-        "answer": 1
-      },
-      {
-        "id": 2468,
-        "type": "multiple_choice",
-        "question": "¿Cuál de las siguientes figuras geométricas tiene 4 lados iguales y 4 ángulos iguales?",
-        "options": [
-          "[math]\\square[/math]",
-          "[math]\\triangle[/math]",
-          "[math]\\circle[/math]",
-          "[math]\\rhombus[/math]"
-        ],
-        "answer": 0
-      },
-      {
-        "id": 3579,
-        "type": "multiple_choice",
-        "question": "Si un punto tiene coordenadas [math](-3, 0)[/math], ¿en qué cuadrante se encuentra?",
-        "options": [
-          "Primer cuadrante",
-          "Segundo cuadrante",
-          "Tercer cuadrante",
-          "Cuarto cuadrante"
-        ],
-        "answer": 2
-      }
-    ]
+  {
+    "id": 1234,
+    "type": "multiple_choice",
+    "question": "Si una función lineal tiene una pendiente de [math]2[/math] y pasa por el punto ([math]0, 3[/math]), ¿cuál es la ecuación de la función?",
+    "options": [
+      "[math]y = 2x + 3[/math]",
+      "[math]y = 2x - 3[/math]",
+      "[math]y = -2x + 3[/math]",
+      "[math]y = -2x - 3[/math]"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 5678,
+    "type": "open_ended",
+    "question": "Resuelve la ecuación [math]3x - 5 = 14[/math].",
+    "options": null,
+    "answer": "x = 6"
+  },
+  {
+    "id": 9012,
+    "type": "multiple_choice",
+    "question": "Si dos magnitudes son directamente proporcionales, ¿cuál es la relación entre ellas?",
+    "options": [
+      "[math]y = kx[/math]",
+      "[math]y = k/x[/math]",
+      "[math]y = k + x[/math]",
+      "[math]y = k - x[/math]"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 3456,
+    "type": "open_ended",
+    "question": "Calcula el área de un triángulo rectángulo cuya base mide [math]6[/math] cm y su altura mide [math]8[/math] cm.",
+    "options": null,
+    "answer": "24 cm²"
+  },
+  {
+    "id": 7890,
+    "type": "multiple_choice",
+    "question": "Si una moneda se lanza [math]10[/math] veces, ¿cuál es la probabilidad de obtener [math]3[/math] caras?",
+    "options": [
+      "[math]0.1[/math]",
+      "[math]0.3[/math]",
+      "[math]0.5[/math]",
+      "[math]0.7[/math]"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 2345,
+    "type": "open_ended",
+    "question": "Resuelve la siguiente ecuación: [math]2x^2 - 3x + 1 = 0[/math].",
+    "options": null,
+    "answer": "x = 1 o x = 1/2"
+  },
+  {
+    "id": 6789,
+    "type": "multiple_choice",
+    "question": "Si un rectángulo tiene un perímetro de [math]20[/math] cm y un área de [math]24[/math] cm², ¿cuáles son sus dimensiones?",
+    "options": [
+      "[math]4[/math] cm y [math]6[/math] cm",
+      "[math]5[/math] cm y [math]5[/math] cm",
+      "[math]6[/math] cm y [math]4[/math] cm",
+      "[math]8[/math] cm y [math]3[/math] cm"
+    ],
+    "answer": 2
+  },
+  {
+    "id": 1357,
+    "type": "open_ended",
+    "question": "Calcula el valor de [math]x[/math] en la siguiente proporción: [math]2x:6 = 3:9[/math].",
+    "options": null,
+    "answer": "x = 3"
+  },
+  {
+    "id": 2468,
+    "type": "multiple_choice",
+    "question": "Si una función cuadrática tiene vértice en el punto ([math]2, -1[/math]), ¿cuál es su ecuación?",
+    "options": [
+      "[math]y = x^2 - 2x - 1[/math]",
+      "[math]y = x^2 + 2x - 1[/math]",
+      "[math]y = -x^2 + 2x - 1[/math]",
+      "[math]y = -x^2 - 2x - 1[/math]"
+    ],
+    "answer": 2
+  },
+  {
+    "id": 3690,
+    "type": "open_ended",
+    "question": "Resuelve la siguiente ecuación: [math]4x - 2 = 10[/math].",
+    "options": null,
+    "answer": "x = 3"
+  }
+]
 
     this.format(this.excLANG)
 

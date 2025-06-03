@@ -84,21 +84,24 @@
           }}
         </p>
       </div> -->
-
-
-
       </div>
 
-
-      
-        <ng-container *ngIf="loading[i]; else content">
-          <app-skeleton></app-skeleton>
-          <app-skeleton></app-skeleton>
+      <ng-container *ngIf="loading[i]; else content">
+        <app-skeleton></app-skeleton>
+        <app-skeleton></app-skeleton>
+      </ng-container>
+      <ng-template #content>
+        <ng-container *ngIf="!loading[i]">
+          <div class="respuesta-contenedor">
+            <span
+              *ngFor="let grupo of visibleResponse[i]; let j = index"
+              class="respuesta-fragmento"
+              [style.animation-delay]="j * 0.3 + 's'"
+              [innerHTML]="grupo"
+            ></span>
+          </div>
         </ng-container>
-        <ng-template #content>
-          <p #aiResponseBlock [innerHTML]="IAresponse[i]"></p>
-        </ng-template>
-
+      </ng-template>
     </div>
   </div>
 </div>
