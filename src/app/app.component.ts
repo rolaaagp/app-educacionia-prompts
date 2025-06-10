@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SocketService } from '../services/socket/socket.service';
 import { GetUserByEmailResponse, UserService } from '../services/user/user.service';
@@ -8,7 +8,7 @@ import { MathComponent } from "./components/math/math.component";
 import { CommonModule } from '@angular/common';
 import { IBody, MainService } from '../services/main.services';
 import { SkeletonComponent } from "./components/skeleton/skeleton.component";
-import { retry } from 'rxjs';
+import { catchError, forkJoin, of, retry } from 'rxjs';
 
 
 export type Exercise = {
@@ -30,6 +30,7 @@ export type Exercise = {
 export class AppComponent implements OnInit {
   email: string = 'rgarcia@nexia.cl';
   isLoggedInWS: boolean = false;
+  onKnow: boolean = false;
   user!: GetUserByEmailResponse["data"];
 
   language: boolean = false;
@@ -39,7 +40,7 @@ export class AppComponent implements OnInit {
     course: '2M',
     subject: 'MATH',
     contents: 'funciones, ecuaciones, proporcionalidad, geometría o probabilidades',
-    quantity_exercise: 1,
+    quantity_exercise: 20,
     typeQuestions: "dev"
   };
 
@@ -53,121 +54,103 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly _userService: UserService,
     private readonly socketService: SocketService,
-    private readonly mainService: MainService
+    private readonly mainService: MainService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   async ngOnInit() {
+
+    this.excLANG = [
+      {
+        "id": 7392,
+        "type": "open_ended",
+        "question": "Lee el siguiente fragmento del poema 'Piececitos' de Gabriela Mistral:\n\n'Piececitos de niño,\nazulosos de frío,\n¡cómo os ven y no os cubren,\nDios mío!'\n\nAnaliza el uso de la personificación en estos versos y explica cómo contribuye a transmitir el mensaje central del poema.",
+        "options": null,
+        "answer": ""
+      }
+    ]
     this.excMATH = [
-  {
-    "id": 1234,
-    "type": "multiple_choice",
-    "question": "Si una función lineal tiene una pendiente de [math]2[/math] y pasa por el punto ([math]0, 3[/math]), ¿cuál es la ecuación de la función?",
-    "options": [
-      "[math]y = 2x + 3[/math]",
-      "[math]y = 2x - 3[/math]",
-      "[math]y = -2x + 3[/math]",
-      "[math]y = -2x - 3[/math]"
-    ],
-    "answer": 0
-  },
-  {
-    "id": 5678,
-    "type": "open_ended",
-    "question": "Resuelve la ecuación [math]3x - 5 = 14[/math].",
-    "options": null,
-    "answer": "x = 6"
-  },
-  {
-    "id": 9012,
-    "type": "multiple_choice",
-    "question": "Si dos magnitudes son directamente proporcionales, ¿cuál es la relación entre ellas?",
-    "options": [
-      "[math]y = kx[/math]",
-      "[math]y = k/x[/math]",
-      "[math]y = k + x[/math]",
-      "[math]y = k - x[/math]"
-    ],
-    "answer": 0
-  },
-  {
-    "id": 3456,
-    "type": "open_ended",
-    "question": "Calcula el área de un triángulo rectángulo cuya base mide [math]6[/math] cm y su altura mide [math]8[/math] cm.",
-    "options": null,
-    "answer": "24 cm²"
-  },
-  {
-    "id": 7890,
-    "type": "multiple_choice",
-    "question": "Si una moneda se lanza [math]10[/math] veces, ¿cuál es la probabilidad de obtener [math]3[/math] caras?",
-    "options": [
-      "[math]0.1[/math]",
-      "[math]0.3[/math]",
-      "[math]0.5[/math]",
-      "[math]0.7[/math]"
-    ],
-    "answer": 1
-  },
-  {
-    "id": 2345,
-    "type": "open_ended",
-    "question": "Resuelve la siguiente ecuación: [math]2x^2 - 3x + 1 = 0[/math].",
-    "options": null,
-    "answer": "x = 1 o x = 1/2"
-  },
-  {
-    "id": 6789,
-    "type": "multiple_choice",
-    "question": "Si un rectángulo tiene un perímetro de [math]20[/math] cm y un área de [math]24[/math] cm², ¿cuáles son sus dimensiones?",
-    "options": [
-      "[math]4[/math] cm y [math]6[/math] cm",
-      "[math]5[/math] cm y [math]5[/math] cm",
-      "[math]6[/math] cm y [math]4[/math] cm",
-      "[math]8[/math] cm y [math]3[/math] cm"
-    ],
-    "answer": 2
-  },
-  {
-    "id": 1357,
-    "type": "open_ended",
-    "question": "Calcula el valor de [math]x[/math] en la siguiente proporción: [math]2x:6 = 3:9[/math].",
-    "options": null,
-    "answer": "x = 3"
-  },
-  {
-    "id": 2468,
-    "type": "multiple_choice",
-    "question": "Si una función cuadrática tiene vértice en el punto ([math]2, -1[/math]), ¿cuál es su ecuación?",
-    "options": [
-      "[math]y = x^2 - 2x - 1[/math]",
-      "[math]y = x^2 + 2x - 1[/math]",
-      "[math]y = -x^2 + 2x - 1[/math]",
-      "[math]y = -x^2 - 2x - 1[/math]"
-    ],
-    "answer": 2
-  },
-  {
-    "id": 3690,
-    "type": "open_ended",
-    "question": "Resuelve la siguiente ecuación: [math]4x - 2 = 10[/math].",
-    "options": null,
-    "answer": "x = 3"
-  }
-]
-
-    this.format(this.excLANG)
-
-    this.socketService.connectadConfirmed$.subscribe((estado) => {
-      console.log("WebSocket:", estado); // o usa un toast, alert, etc.
-    });
-
+      {
+        "id": 9234,
+        "type": "open_ended",
+        "question": "Una fábrica produce [math]x[/math] unidades de un producto en [math]t[/math] horas. Si la relación entre estas variables se representa mediante la función [math]f(t) = 50t - 20[/math], determina cuántas unidades se producirán en 8 horas.",
+        "options": null,
+        "answer": "380 unidades"
+      },
+      {
+        "id": 5678,
+        "type": "open_ended",
+        "question": "En un triángulo rectángulo, la hipotenusa mide 13 cm y uno de los catetos mide 5 cm. Calcula la longitud del otro cateto utilizando el teorema de Pitágoras.",
+        "options": null,
+        "answer": "12 cm"
+      },
+      {
+        "id": 3456,
+        "type": "open_ended",
+        "question": "En una urna hay 5 bolas rojas, 3 bolas azules y 2 bolas verdes. Si se extrae una bola al azar, ¿cuál es la probabilidad de que sea roja o verde?",
+        "options": null,
+        "answer": "0.7 o 7/10"
+      },
+      {
+        "id": 7392,
+        "type": "open_ended",
+        "question": "Una empresa de telefonía móvil ofrece un plan con un cargo fijo mensual de $5000 más $50 por cada minuto de llamada. Si [math]x[/math] representa los minutos de llamada al mes, expresa la función que modela el costo total mensual [math]C(x)[/math] y determina el costo para un mes con 120 minutos de llamadas.",
+        "options": null,
+        "answer": "La función es [math]C(x) = 50x + 5000[/math]. El costo para 120 minutos es $11000."
+      },
+      {
+        "id": 4815,
+        "type": "open_ended",
+        "question": "En un experimento de laboratorio, se lanza una pelota desde una altura de 20 metros. La altura [math]h[/math] de la pelota en metros después de [math]t[/math] segundos está dada por la función [math]h(t) = -5t^2 + 10t + 20[/math]. Calcula en qué momento la pelota tocará el suelo.",
+        "options": null,
+        "answer": "La pelota tocará el suelo después de 4 segundos."
+      }
+    ]
     const user = JSON.parse(localStorage.getItem("userEDUCACIONIA") as string) as GetUserByEmailResponse["data"];
     if (user) {
       this.user = user;
       this.formData.user_id = user.user_id;
-      this.isLoggedInWS = await this.socketService.startWSConnection();
     }
+
+    this.socketService.setUserMessageSubject(this._userService.message);
+    this.socketService.connect("wss://soc-api-educacion.csff.cl");
+
+    this.socketService.connectadConfirmed$.subscribe((estado) => {
+      this.isLoggedInWS = estado === 'conectado';
+      console.log("WebSocket:", estado);
+    });
+
+    this._userService.message.subscribe({
+      next: (res: any) => {
+        console.log("Socket Message App Component ->", res)
+        try {
+          const payload = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+
+
+          if (payload.action === "onKnow") this.onKnow = payload.online
+
+          if (payload.action === 'chunkExercises_MATH' && Array.isArray(payload.data)) {
+            console.log("Chunk Math ++ ->", payload.data)
+            this.excMATH = [...this.excMATH, ...payload.data];
+            this.cdr.detectChanges();
+          }
+
+          if (payload.action === 'chunkExercises_LANG' && Array.isArray(payload.data)) {
+            console.log("Chunk Lang ++ ->", payload.data)
+            this.excLANG = [...this.excLANG, ...payload.data];
+            this.cdr.detectChanges();
+          }
+
+        } catch (error) {
+          console.error('Error al procesar mensaje de socket:', error);
+        }
+      }
+    });
+
+    this.isLoggedInWS = await this.socketService.startWSConnection();
   }
+
+
 
   save() {
     this._userService.getByEmail(this.email).subscribe({
@@ -245,6 +228,59 @@ export class AppComponent implements OnInit {
       }
     });
 
+  }
+
+  solicitarPorChunks() {
+    this.loading = true;
+    const total = this.formData.quantity_exercise;
+    const chunkSize = 1;
+    const chunks = Math.ceil(total / chunkSize);
+    const contents = this.formData.contents.toLowerCase();
+
+    const requests = Array.from({ length: chunks }, (_, i) => {
+      const cantidad = i === chunks - 1 ? total - chunkSize * i : chunkSize;
+      const payload = { ...this.formData, contents, quantity_exercise: cantidad };
+      return this.mainService.generateExercises(payload).pipe(
+        retry(3),
+        catchError((err) => {
+          console.error('Error en chunk', i, err);
+          return of({ data: [] });
+        })
+      );
+    });
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        const all = responses.flatMap((res) => {
+          let rawData = res.data;
+          if (rawData?.rawData && typeof rawData.rawData === 'string') {
+            try {
+              rawData = JSON.parse(rawData.rawData);
+            } catch {
+              rawData = [];
+            }
+          }
+          return Array.isArray(rawData)
+            ? rawData
+            : this.extractExercisesFromText(rawData?.toString() || '');
+        });
+
+        const limited = all.slice(0, total);
+
+        if (this.formData.subject === "LANG") {
+          this.excLANG = limited;
+        } else {
+          this.excMATH = limited;
+        }
+      },
+      error: (err) => {
+        console.error("Error final al generar ejercicios:", err);
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
   }
 
   format(limited: Exercise[]) {

@@ -1,8 +1,17 @@
 <div
-  class="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl space-y-8 border border-blue-100"
+  class="max-w-2xl mx-auto p-8 shadow-xl rounded-3xl space-y-8 border border-blue-100"
 >
+  <div
+    class="socket-status"
+    [ngClass]="{ conectado: isLoggedInWS, desconectado: !isLoggedInWS }"
+  >
+    Socket: {{ isLoggedInWS ? "Conectado" : "Desconectado" }}
+    <br>
+    Reconicimiento: {{ onKnow ? "Listo" : "No" }}
+  </div>
+
   <!-- <div class="space-y-2">
-    <label for="email" class="block text-sm font-semibold text-blue-700"
+    <label for="email" class="block text-sm font-semibold"
       >Correo</label
     >
     <input
@@ -22,7 +31,7 @@
 
   <form #form="ngForm" class="space-y-5">
     <div>
-      <label for="course" class="block text-sm font-semibold text-blue-700"
+      <label for="course" class="block text-sm font-semibold"
         >Curso</label
       >
       <select
@@ -40,7 +49,7 @@
     </div>
 
     <div>
-      <label for="subject" class="block text-sm font-semibold text-blue-700"
+      <label for="subject" class="block text-sm font-semibold"
         >Asignatura</label
       >
       <select
@@ -57,7 +66,7 @@
     <div>
       <label
         for="typeQuestions"
-        class="block text-sm font-semibold text-blue-700"
+        class="block text-sm font-semibold"
         >Las preguntas deben ser de respuestas</label
       >
       <select
@@ -74,7 +83,7 @@
     </div>
 
     <div>
-      <label for="contents" class="block text-sm font-semibold text-blue-700"
+      <label for="contents" class="block text-sm font-semibold"
         >Contenidos</label
       >
       <textarea
@@ -89,7 +98,7 @@
     </div>
 
     <div>
-      <label for="quantity" class="block text-sm font-semibold text-blue-700"
+      <label for="quantity" class="block text-sm font-semibold"
         >Cantidad de ejercicios</label
       >
       <input

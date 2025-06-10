@@ -24,11 +24,11 @@
     <div
       *ngFor="let e of exercises; let i = index"
       [@fadeIn]
-      class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm space-y-4"
+      class="p-5 border border-gray-200 rounded-lg shadow-sm space-y-4"
     >
-      <div class="text-gray-800" [@fadeIn]>
+      <div class="" [@fadeIn]>
         <strong>{{ i + 1 }}.</strong>
-        <span>{{ e.question }}</span>
+        <span [innerHTML]="e.question"></span>
       </div>
 
       <ul *ngIf="e.options" class="space-y-2" [@fadeIn]>
@@ -73,7 +73,7 @@
           Enviar respuesta
         </button>
       </div>
-<!-- 
+      <!-- 
       <div *ngIf="respuestasCorrectas[i] !== undefined">
         <p
           class="mt-2 font-semibold"

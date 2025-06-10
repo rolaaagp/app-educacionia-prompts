@@ -1,7 +1,7 @@
 <div class="mb-6">
   <button
     (click)="mostrarMatematicas = !mostrarMatematicas"
-    class="w-full cursor-pointer flex justify-between items-center px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+    class="w-full cursor-pointer flex justify-between items-center px-5 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
   >
     <span class="text-lg font-semibold">Matemáticas</span>
     <svg
@@ -17,16 +17,16 @@
   </button>
 
   <div *ngIf="mostrarMatematicas" class="mt-4 space-y-6">
-    <span *ngIf="!exercises" class="text-gray-500" [@fadeIn]
+    <span *ngIf="!exercises" class="text-white-500" [@fadeIn]
       >No hay ejercicios aún.</span
     >
 
     <div
       *ngFor="let e of exercises; let i = index"
       [@fadeIn]
-      class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm space-y-4"
+      class="p-5 border border-white-200 rounded-lg shadow-sm space-y-4"
     >
-      <div class="text-gray-800" [@fadeIn]>
+      <div class="text-white-800" [@fadeIn]>
         <strong>{{ i + 1 }}.</strong>
         <span #questionEl></span>
       </div>
@@ -41,9 +41,9 @@
               [(ngModel)]="userResponses[i]"
               (ngModelChange)="viewAnswer(i)"
               [disabled]="preguntaRespondida[i]"
-              class="mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+              class="mt-1 h-4 w-4 text-blue-600 border-white-300 focus:ring-blue-500"
             />
-            <span class="text-gray-700">
+            <span class="text-white-700">
               <strong class="mr-3">{{ getOptionLetter(j) }}.</strong>
               <span #optionEl></span>
             </span>
@@ -54,15 +54,14 @@
       <div *ngIf="e.type === 'open_ended'" [@fadeIn] class="space-y-3">
         <textarea
           rows="3"
-          [disabled]="preguntaRespondida[i]"
           [(ngModel)]="userResponses[i]"
           placeholder="Escribe tu respuesta"
-          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
+          class="w-full border border-white-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
         ></textarea>
 
         <div *ngIf="e.type === 'open_ended'" class="pt-2">
           <button
-            class="cursor-pointer px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+            class="cursor-pointer px-4 py-2 bg-green-600 rounded hover:bg-green-700 transition"
             (click)="viewAnswer(i)"
           >
             Enviar respuesta

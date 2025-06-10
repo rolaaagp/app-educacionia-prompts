@@ -58,15 +58,15 @@ export class SocketService {
       clearInterval(this.intervalId);
     }
 
+    this.getWebsocketID(user?.user_id as number);
+
     this.intervalId = setInterval(() => {
       this.getWebsocketID(user?.user_id as number);
-      if (this.intervalId) {
-        this.startWSConnection();
-      }
     }, !this.isLoggedInWS ? 10000 : minutos * 60 * 1000);
 
     return this.isLoggedInWS;
   }
+
 
   getWebsocketID(userId: number) {
     if (!this.userMessageSubject) return;

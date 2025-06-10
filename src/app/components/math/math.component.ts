@@ -1,15 +1,17 @@
-import { Component, Input, inject, AfterViewChecked, SimpleChanges, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, inject, AfterViewChecked, SimpleChanges, OnChanges, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { MainService } from '../../../services/main.services';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { ElementRef, QueryList, ViewChildren, ChangeDetectorRef } from '@angular/core';
+import { retry } from 'rxjs';
 declare const MathJax: any;
 
 @Component({
   selector: 'app-math',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, SkeletonComponent],
   animations: [
     trigger('fadeIn', [
@@ -20,7 +22,7 @@ declare const MathJax: any;
     ]),
   ],
   templateUrl: './math.component.html',
-  styleUrl: './math.component.css'
+  styleUrl: './math.component.css',
 })
 export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
   @Input() exercises!: any[];
@@ -57,8 +59,8 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
         if (Array.isArray(m.options)) {
           m.options = m.options.map((o: string) =>
             o.replace("[math]\\circle[/math]", "[math]\\circ[/math]")
-             .replace("[math]\\rhombus[/math]", "[math]\\Diamond[/math]")
-             .replace("[math]\\cuadrado[/math]", "[math]\\square[/math]")
+              .replace("[math]\\rhombus[/math]", "[math]\\Diamond[/math]")
+              .replace("[math]\\cuadrado[/math]", "[math]\\square[/math]")
           );
         }
       });
@@ -69,6 +71,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
       this.userResponses = Array(this.exercises.length).fill('');
       this.respuestasCorrectas = Array(this.exercises.length).fill(null);
     }
+    this.updateMathJax();
   }
 
   ngAfterViewInit() {
@@ -122,15 +125,18 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
       course: this.course,
       subject: this.subject,
       exercise: { ...exercise, userAnswer: resolvedAnswer }
-    }).subscribe({
+    }).pipe(retry(3)).subscribe({
       next: (res) => {
         const render = this.renderEvaluacion(res.data);
         this.IAresponse[index] = render;
         this.visibleResponse[index] = [];
-        this.revealResponse(index);
-        this.updateMathJax();
+
         this.cdr.detectChanges();
+
+        this.revealResponse(index);
+
         this.needsTypeset = true;
+        this.loading[index] = false;
       },
       complete: () => {
         this.loading[index] = false;
@@ -140,22 +146,52 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
 
   revealResponse(index: number, step = 0) {
     if (!this.IAresponse[index] || step >= this.IAresponse[index].length) return;
+
     if (!this.visibleResponse[index]) this.visibleResponse[index] = [];
+
     const block = this.IAresponse[index][step];
     this.visibleResponse[index].push(block);
-    this.cdr.detectChanges();
+
+    this.cdr.markForCheck();
+    this.updateMathJax();
+
     setTimeout(() => this.revealResponse(index, step + 1), 400);
   }
+
+
 
   renderEvaluacion(evaluacion: string): string[] {
     const replaced = this.replaceLatex(evaluacion);
     return replaced.split(/<br\s*\/?>|\n+/).map(t => t.trim()).filter(Boolean);
   }
 
+
   replaceLatex(input: string): string {
     if (!input || typeof input !== 'string') return input;
-    return input.replace(/\[math\]([\s\S]+?)\[\/math\]/g, (_m, expr) => `\\(${expr.trim()}\\)`);
+    const LATEX_COMMANDS_REGEX = /(frac|rac|triangle|Diamond|implies|colon|quad|binom|dfrac|tfrac|sqrt|root|sum|prod|int|lim|log|ln|exp|sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan|sinh|cosh|tanh|min|max|arg|deg|det|dim|mod|gcd|lcm|circ|cdot|cdots|ldots|vdots|ddots|forall|exists|nexists|infty|partial|nabla|pm|mp|leq|geq|neq|approx|equiv|propto|to|rightarrow|leftarrow|Rightarrow|Leftarrow|leftrightarrow|mapsto|hookrightarrow|hookleftarrow|uparrow|downarrow|updownarrow|longrightarrow|longleftarrow|Longrightarrow|Longleftarrow|longleftrightarrow|overline|underline|vec|hat|tilde|bar|dot|ddot|text|boxed)/;
+
+    const escapeLatex = (expr: string): string => {
+      expr = expr
+        .replace(/\\circle/g, '\\circ')
+        .replace(/\\rhombus/g, '\\Diamond')
+        .replace(/\\cuadrado/g, '\\square');
+
+      if (new RegExp(`\\\\${LATEX_COMMANDS_REGEX.source}`).test(expr)) {
+        return expr.trim();
+      }
+
+      return expr
+        .replace(new RegExp(`(?<!\\\\)${LATEX_COMMANDS_REGEX.source}`, 'g'), '\\$1')
+        .trim();
+    };
+
+
+    return input.replace(/\[math\]([\s\S]+?)\[\/math\]/g, (_m, expr) => {
+      const cleaned = escapeLatex(expr.trim());
+      return `\\(${cleaned}\\)`;
+    });
   }
+
 
   updateMathJax() {
     if (typeof MathJax !== 'undefined') {

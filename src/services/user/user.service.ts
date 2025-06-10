@@ -35,7 +35,7 @@ export class UserService {
 
   constructor(private readonly http: HttpClient, private readonly _socketService: SocketService) {
     this.message = _socketService.connect(this.SOC_DOMAIN);
-    this._socketService.setUserMessageSubject(this.message); // se pasa el subject, no el servicio entero
+    this._socketService.setUserMessageSubject(this.message);
     this.conexion = _socketService.connectadConfirmed$ as Subject<any>;
   }
 

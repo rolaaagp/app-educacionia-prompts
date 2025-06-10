@@ -7,3 +7,42 @@
   font-optical-sizing: auto;
   font-style: normal;
 }
+
+body.dark {
+  background-color: #0f172a;
+  color: #c6c6cd;
+}
+
+body.dark a {
+  color: #93c5fd;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background-color: #1e293b;
+  color: #c6c6cd;
+  border-color: #334155;
+}
+
+body.dark button {
+  background-color: #334155;
+  color: #c6c6cd;
+}
+
+body.dark .card,
+body.dark .modal,
+body.dark .dropdown,
+body.dark .tooltip {
+  background-color: #1e293b;
+  color: #c6c6cd;
+}
+
+body.dark ::placeholder {
+  color: #94a3b8;
+}
+
+body.dark code {
+  background-color: #1e293b;
+  color: #facc15;
+}
