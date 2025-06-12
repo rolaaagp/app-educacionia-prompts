@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Exercise } from '../../app.component';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FormsModule } from '@angular/forms';
 import { MainService } from '../../../services/main.services';
 import { SkeletonComponent } from "../skeleton/skeleton.component";
+import { Exercise } from '../../main/main.component';
 
 
 type Paso = {

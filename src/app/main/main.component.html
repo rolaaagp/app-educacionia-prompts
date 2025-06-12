@@ -1,0 +1,208 @@
+<div
+  class="max-w-2xl mx-auto p-8 shadow-xl rounded-3xl space-y-8 border border-blue-100"
+>
+  <div
+    class="socket-status"
+    [ngClass]="{ conectado: isLoggedInWS, desconectado: !isLoggedInWS }"
+  >
+    Socket: {{ isLoggedInWS ? "Conectado" : "Desconectado" }}
+    <br />
+    Reconicimiento: {{ onKnow ? "Listo" : "No" }}
+  </div>
+
+  <!-- <div class="space-y-2">
+    <label for="email" class="block text-sm font-semibold"
+      >Correo</label
+    >
+    <input
+      id="email"
+      type="text"
+      [(ngModel)]="email"
+      placeholder="ejemplo@correo.cl"
+      class="w-full border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm"
+    />
+    <button
+      (click)="save()"
+      class="cursor-pointer mt-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-medium"
+    >
+      Guardar
+    </button>
+  </div> -->
+
+  <form #form="ngForm" class="space-y-5">
+    <div>
+      <label for="mood" class="block text-sm font-semibold">Mood</label>
+      <select
+        id="mood"
+        name="mood"
+        [(ngModel)]="formData.mood"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+      >
+        <option value="motivado">motivado</option>
+        <option value="desanimado">desanimado</option>
+        <option value="neutro">neutro</option>
+      </select>
+    </div>
+    <div>
+      <label for="course" class="block text-sm font-semibold">Curso</label>
+      <select
+        id="course"
+        name="course"
+        [(ngModel)]="formData.course"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+      >
+        <option value="1M">1M</option>
+        <option value="2M">2M</option>
+        <option value="3M">3M</option>
+        <option value="4M">4M</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="subject" class="block text-sm font-semibold"
+        >Asignatura</label
+      >
+      <select
+        id="subject"
+        name="subject"
+        [(ngModel)]="formData.subject"
+        (ngModelChange)="changeSubject()"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+      >
+        <option value="LANG">Lenguaje</option>
+        <option value="MATH">Matemática</option>
+      </select>
+    </div>
+    <div>
+      <label for="typeQuestions" class="block text-sm font-semibold"
+        >Las preguntas deben ser de respuestas</label
+      >
+      <select
+        id="typeQuestions"
+        name="typeQuestions"
+        [(ngModel)]="formData.typeQuestions"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+      >
+        <option value="dev">Desarrollo</option>
+        <option value="options">Alternativas</option>
+        <option value="mix">Desarrollo y Alternativas</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="contents" class="block text-sm font-semibold"
+        >Contenidos</label
+      >
+      <textarea
+        id="contents"
+        name="contents"
+        rows="4"
+        [(ngModel)]="formData.contents"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm"
+        placeholder="Ej: ecuaciones, funciones, proporcionalidad, etc."
+      ></textarea>
+    </div>
+
+    <div>
+      <label for="quantity" class="block text-sm font-semibold"
+        >Cantidad de ejercicios</label
+      >
+      <input
+        type="number"
+        id="quantity"
+        name="quantity_exercise"
+        min="1"
+        max="20"
+        [(ngModel)]="formData.quantity_exercise"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white shadow-sm"
+      />
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button
+        type="button"
+        [disabled]="loading"
+        (click)="solicitar()"
+        class="px-6 cursor-pointer py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+      >
+        Generar
+      </button>
+      <span
+        *ngIf="loading"
+        class="text-sm text-red-500 font-medium animate-pulse"
+      >
+        Generando...
+      </span>
+    </div>
+  </form>
+
+  <ng-container *ngIf="loading; else content">
+    <app-skeleton></app-skeleton>
+    <app-skeleton></app-skeleton>
+  </ng-container>
+
+  <ng-template #content>
+    <app-language
+      [exercises]="excLANG"
+      [subject]="formData.subject"
+      [course]="formData.course"
+      [mood]="formData.mood"
+    ></app-language>
+    <app-math
+      [exercises]="excMATH"
+      [subject]="formData.subject"
+      [course]="formData.course"
+      [mood]="formData.mood"
+    ></app-math>
+  </ng-template>
+
+  <ng-template [ngTemplateOutlet]="tplMaterialApoyo"></ng-template>
+
+  <!-- <span> {{t}}</span> -->
+</div>
+
+<ng-template #tplMaterialApoyo>
+  <button
+    type="button"
+    (click)="getMaterialApoyo()"
+    class="px-6 cursor-pointer py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+  >
+    Generar material de apoyo - {{ formData.subject }}
+  </button>
+
+  <br />
+
+  <button
+    type="button"
+    (click)="exportarPDF()"
+    *ngIf="materialApoyo"
+    class="px-6 cursor-pointer py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+  >
+    Exportar PDF <small>(en desarrollo)</small>
+  </button>
+
+  <br />
+
+ 
+  <kendo-pdf-export
+    #pdfExport
+    [paperSize]="'A4'"
+    [margin]="{ top: '1cm', bottom: '5cm', left: '1cm', right: '1cm' }"
+    [scale]="0.8"
+    [forcePageBreak]="'.page-break'"
+    
+  >
+    <div
+      id="materialApoyo"
+      name="materialApoyo"
+      class="markdown-body"
+      [innerHTML]="materialApoyo"
+    ></div>
+  </kendo-pdf-export>
+</ng-template>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Exercise } from '../app/app.component';
+import { Exercise } from '../app/main/main.component';
 
 export interface IBody {
   user_id: number;
@@ -40,5 +40,9 @@ export class MainService {
 
   getMaterialApoyo(data: IBody): Observable<any> {
     return this.http.post<any>(`${this.DOMAIN}/assistant-api/exercise/get-support-materials`, data);
+  }
+
+  auth(data: { email: string, pwd: string }): Observable<any> {
+    return this.http.get<any>(`${this.DOMAIN}/management-api/users/email?e=${data.email}`);
   }
 }

@@ -1,0 +1,67 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8">
+    <h2 class="text-2xl font-semibold text-center mb-6">Iniciar Sesión</h2>
+    <form (ngSubmit)="login()" #loginForm="ngForm" novalidate>
+
+      <!-- Usuario -->
+      <div class="mb-4">
+        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
+          Usuario
+        </label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          required
+          [(ngModel)]="username"
+          #u="ngModel"
+          [ngClass]="{
+            'border-red-500 focus:ring-red-500': u.invalid && u.touched,
+            'border-gray-300 focus:ring-indigo-500': !(u.invalid && u.touched)
+          }"
+          class="block w-full px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2"
+        />
+        <p *ngIf="u.invalid && u.touched" class="text-red-600 text-sm mt-1">
+          El usuario es obligatorio.
+        </p>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+          Contraseña
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          [(ngModel)]="password"
+          #p="ngModel"
+          [ngClass]="{
+            'border-red-500 focus:ring-red-500': p.invalid && p.touched,
+            'border-gray-300 focus:ring-indigo-500': !(p.invalid && p.touched)
+          }"
+          class="block w-full px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2"
+        />
+        <p *ngIf="p.invalid && p.touched" class="text-red-600 text-sm mt-1">
+          La contraseña es obligatoria.
+        </p>
+      </div>
+
+      <!-- Error general -->
+      <p *ngIf="errorMessage" class="text-red-600 text-center mb-4">
+        {{ errorMessage }}
+      </p>
+
+      <!-- Botón -->
+      <button
+        type="submit"
+        class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-medium rounded-md shadow-sm transition"
+        [disabled]="loginForm.invalid"
+      >
+        Ingresar
+      </button>
+    </form>
+  </div>
+</div>
