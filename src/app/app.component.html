@@ -68,6 +68,7 @@
         id="subject"
         name="subject"
         [(ngModel)]="formData.subject"
+        (ngModelChange)="changeSubject()"
         required
         class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
       >
@@ -161,16 +162,46 @@
     ></app-math>
   </ng-template>
 
-  <ng-template [ngTemplateOutlet]="materialApoyo"></ng-template>
+  <ng-template [ngTemplateOutlet]="tplMaterialApoyo"></ng-template>
 
   <!-- <span> {{t}}</span> -->
 </div>
 
-<ng-template #materialApoyo>
-  <button (click)="getMaterialApoyo()">Generar material de apoyo</button>
-  <br />
+<ng-template #tplMaterialApoyo>
+  <button
+    type="button"
+    (click)="getMaterialApoyo()"
+    class="px-6 cursor-pointer py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+  >
+    Generar material de apoyo - {{ formData.subject }}
+  </button>
+
   <br />
 
-  <h2>Material de apoyo</h2>
-  <div [innerHTML]="materialApoyo"></div>
+  <button
+    type="button"
+    (click)="exportarPDF()"
+    *ngIf="materialApoyo"
+    class="px-6 cursor-pointer py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium"
+  >
+    Exportar PDF <small>(en desarrollo)</small>
+  </button>
+
+  <br />
+
+ 
+  <kendo-pdf-export
+    #pdfExport
+    [paperSize]="'A4'"
+    [margin]="{ top: '1cm', bottom: '5cm', left: '1cm', right: '1cm' }"
+    [scale]="0.8"
+    [forcePageBreak]="'.page-break'"
+  >
+    <div
+      id="materialApoyo"
+      name="materialApoyo"
+      class="markdown-body"
+      [innerHTML]="materialApoyo"
+    ></div>
+  </kendo-pdf-export>
 </ng-template>

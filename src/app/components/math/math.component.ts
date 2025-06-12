@@ -6,6 +6,7 @@ import { MainService } from '../../../services/main.services';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { ElementRef, QueryList, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { retry } from 'rxjs';
+import { replaceLatex1 } from '../../shared/latex-utils';
 declare const MathJax: any;
 
 @Component({
@@ -77,7 +78,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
 
   ngAfterViewInit() {
     this.questionElements.forEach((el, i) => {
-      const html = this.replaceLatex(this.exercises[i].question);
+      const html = replaceLatex1(this.exercises[i].question);
       el.nativeElement.innerHTML = html;
     });
     this.canvasElements.forEach((canvasRef, i) => {
@@ -90,7 +91,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
   ngAfterViewChecked(): void {
     if (this.needsTypeset && this.questionElements.length && this.exercises.length) {
       this.questionElements.forEach((el, i) => {
-        const html = this.replaceLatex(this.exercises[i].question);
+        const html = replaceLatex1(this.exercises[i].question);
         el.nativeElement.innerHTML = html;
       });
 
@@ -99,7 +100,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
         if (e.options) {
           e.options.forEach((opt: string) => {
             const el = this.optionElements.get(index);
-            if (el) el.nativeElement.innerHTML = this.replaceLatex(opt);
+            if (el) el.nativeElement.innerHTML = replaceLatex1(opt);
             index++;
           });
         }
@@ -163,7 +164,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
 
 
   renderEvaluacion(evaluacion: string): string[] {
-    const replaced = this.replaceLatex(evaluacion);
+    const replaced = replaceLatex1(evaluacion);
     return replaced.split(/<br\s*\/?>|\n+/).map(t => t.trim()).filter(Boolean);
   }
 

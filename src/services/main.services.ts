@@ -11,6 +11,7 @@ export interface IBody {
   quantity_exercise: number;
   typeQuestions: "mix" | "dev" | "options";
   mood: "motivado" | "desanimado" | "neutro";
+  ex?: any;
 }
 
 export interface IBodyVerify {

@@ -10,14 +10,16 @@
   <body class="dark">
     <app-root></app-root>
   </body>
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [["\\(", "\\)"]] },
-      svg: { fontCache: "global" },
-    };
-  </script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
-    async
-  ></script>
+
+
+<script>
+  window.MathJax = {
+    loader: { load: ['[tex]/ams'] },
+    tex: { inlineMath: [['\\(', '\\)']] },
+    chtml: { scale: 1 },
+    svg:  { fontCache: 'none' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
 </html>
