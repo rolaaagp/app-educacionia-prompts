@@ -28,6 +28,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
   @Input() exercises!: any[];
   @Input() course!: '1M' | '2M' | '3M' | '4M';
   @Input() subject!: 'LANG' | 'MATH';
+  @Input() mood: any;
 
   @ViewChildren('canvasElement') canvasElements!: QueryList<ElementRef>;
   private canvasCtx: CanvasRenderingContext2D[] = [];
@@ -124,6 +125,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
     this.mainService.verifyExercise({
       course: this.course,
       subject: this.subject,
+      mood: this.mood,
       exercise: { ...exercise, userAnswer: resolvedAnswer }
     }).pipe(retry(3)).subscribe({
       next: (res) => {

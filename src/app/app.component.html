@@ -6,7 +6,7 @@
     [ngClass]="{ conectado: isLoggedInWS, desconectado: !isLoggedInWS }"
   >
     Socket: {{ isLoggedInWS ? "Conectado" : "Desconectado" }}
-    <br>
+    <br />
     Reconicimiento: {{ onKnow ? "Listo" : "No" }}
   </div>
 
@@ -31,9 +31,21 @@
 
   <form #form="ngForm" class="space-y-5">
     <div>
-      <label for="course" class="block text-sm font-semibold"
-        >Curso</label
+      <label for="mood" class="block text-sm font-semibold">Mood</label>
+      <select
+        id="mood"
+        name="mood"
+        [(ngModel)]="formData.mood"
+        required
+        class="w-full border border-blue-200 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
       >
+        <option value="motivado">motivado</option>
+        <option value="desanimado">desanimado</option>
+        <option value="neutro">neutro</option>
+      </select>
+    </div>
+    <div>
+      <label for="course" class="block text-sm font-semibold">Curso</label>
       <select
         id="course"
         name="course"
@@ -64,9 +76,7 @@
       </select>
     </div>
     <div>
-      <label
-        for="typeQuestions"
-        class="block text-sm font-semibold"
+      <label for="typeQuestions" class="block text-sm font-semibold"
         >Las preguntas deben ser de respuestas</label
       >
       <select
@@ -141,13 +151,26 @@
       [exercises]="excLANG"
       [subject]="formData.subject"
       [course]="formData.course"
+      [mood]="formData.mood"
     ></app-language>
     <app-math
       [exercises]="excMATH"
       [subject]="formData.subject"
       [course]="formData.course"
+      [mood]="formData.mood"
     ></app-math>
   </ng-template>
 
+  <ng-template [ngTemplateOutlet]="materialApoyo"></ng-template>
+
   <!-- <span> {{t}}</span> -->
 </div>
+
+<ng-template #materialApoyo>
+  <button (click)="getMaterialApoyo()">Generar material de apoyo</button>
+  <br />
+  <br />
+
+  <h2>Material de apoyo</h2>
+  <div [innerHTML]="materialApoyo"></div>
+</ng-template>

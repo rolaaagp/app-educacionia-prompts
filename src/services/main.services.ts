@@ -10,12 +10,14 @@ export interface IBody {
   contents: string;
   quantity_exercise: number;
   typeQuestions: "mix" | "dev" | "options";
+  mood: "motivado" | "desanimado" | "neutro";
 }
 
 export interface IBodyVerify {
   exercise: Exercise;
   course: '1M' | '2M' | '3M' | '4M';
   subject: 'LANG' | 'MATH';
+  mood: "motivado" | "desanimado" | "neutro";
 }
 
 @Injectable({
@@ -33,5 +35,9 @@ export class MainService {
 
   verifyExercise(data: IBodyVerify): Observable<any> {
     return this.http.post<any>(`${this.DOMAIN}/assistant-api/exercise/verify`, data);
+  }
+
+  getMaterialApoyo(data: IBody): Observable<any> {
+    return this.http.post<any>(`${this.DOMAIN}/assistant-api/exercise/get-support-materials`, data);
   }
 }

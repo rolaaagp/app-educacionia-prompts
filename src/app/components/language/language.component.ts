@@ -38,6 +38,7 @@ export class LanguageComponent implements OnChanges {
   @Input() exercises!: Exercise[];
   @Input() course!: '1M' | '2M' | '3M' | '4M';
   @Input() subject!: 'LANG' | 'MATH';
+  @Input() mood: any;
 
   mainService = inject(MainService);
   mostrarLenguaje = false;
@@ -102,6 +103,7 @@ export class LanguageComponent implements OnChanges {
     this.mainService.verifyExercise({
       course: this.course,
       subject: this.subject,
+      mood: this.mood,
       exercise: { ...exercise, userAnswer }
     }).subscribe({
       next: (res) => {

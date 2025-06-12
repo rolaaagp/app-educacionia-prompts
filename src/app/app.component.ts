@@ -36,12 +36,13 @@ export class AppComponent implements OnInit {
   language: boolean = false;
 
   formData: IBody = {
-    user_id: 0,
+    user_id: 1,
     course: '2M',
     subject: 'MATH',
     contents: 'funciones, ecuaciones, proporcionalidad, geometría o probabilidades',
     quantity_exercise: 20,
-    typeQuestions: "dev"
+    typeQuestions: "dev",
+    mood: "neutro"
   };
 
   excLANG!: Exercise[];
@@ -50,6 +51,9 @@ export class AppComponent implements OnInit {
   t: string = "";
 
   loading = false;
+
+
+  materialApoyo: any;
 
   constructor(
     private readonly _userService: UserService,
@@ -321,6 +325,15 @@ export class AppComponent implements OnInit {
   }
 
 
+  getMaterialApoyo() {
+    const form = { ...this.formData, contents: this.formData.contents.toLowerCase() }
+
+    this.mainService.getMaterialApoyo(form).subscribe({
+      next: (res) => {
+
+      }
+    })
+  }
 
 
 }
