@@ -48,6 +48,11 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
 
   language: boolean = false;
 
+  subjectDict = {
+    "MATH": "Matemática",
+    "LANG": "Lengua y literatura"
+  }
+
   formData: IBody = {
     user_id: 1,
     course: '2M',
@@ -339,7 +344,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
         }
 
       });
-      
+
       this.socketService.connect("wss://soc-api-educacion.csff.cl");
 
       this.socketService.connectadConfirmed$.subscribe((estado) => {
