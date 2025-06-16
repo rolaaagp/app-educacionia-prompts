@@ -54,7 +54,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
   }
 
   formData: IBody = {
-    user_id: 1,
+    user_id: 2,
     course: '2M',
     subject: 'MATH',
     contents: '',
