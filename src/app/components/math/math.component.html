@@ -1,7 +1,7 @@
 <div class="mb-6">
   <button
-    (click)="mostrarMatematicas = !mostrarMatematicas"
-    class="w-full cursor-pointer flex justify-between items-center px-5 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+    (click)="toggleMostrar()"
+    class="w-full cursor-pointer text-white flex justify-between items-center px-5 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
   >
     <span class="text-lg font-semibold">Matemáticas</span>
     <svg
@@ -22,7 +22,7 @@
     >
 
     <div
-      *ngFor="let e of exercises; let i = index"
+      *ngFor="let e of exercises; let i = index; trackBy: trackById"
       [@fadeIn]
       class="p-5 border border-white-200 rounded-lg shadow-sm space-y-4"
     >
@@ -61,7 +61,7 @@
 
         <div *ngIf="e.type === 'open_ended'" class="pt-2">
           <button
-            class="cursor-pointer px-4 py-2 bg-green-600 rounded hover:bg-green-700 transition"
+            class="cursor-pointer px-4 text-white py-2 bg-green-600 rounded hover:bg-green-700 transition"
             (click)="viewAnswer(i)"
           >
             Enviar respuesta

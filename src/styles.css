@@ -7,7 +7,7 @@
   font-optical-sizing: auto;
   font-style: normal;
 }
-
+/* 
 body.dark {
   background-color: #0f172a;
   color: #c6c6cd;
@@ -45,4 +45,4 @@ body.dark ::placeholder {
 body.dark code {
   background-color: #1e293b;
   color: #facc15;
-}
+} */

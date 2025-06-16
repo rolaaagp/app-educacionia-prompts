@@ -1,4 +1,4 @@
-import { Component, Input, inject, AfterViewChecked, SimpleChanges, OnChanges, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, inject, AfterViewChecked, SimpleChanges, OnChanges, OnInit, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -25,7 +25,7 @@ declare const MathJax: any;
   templateUrl: './math.component.html',
   styleUrl: './math.component.css',
 })
-export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
+export class MathComponent implements AfterViewChecked, OnChanges, OnInit, AfterViewInit {
   @Input() exercises!: any[];
   @Input() course!: '1M' | '2M' | '3M' | '4M';
   @Input() subject!: 'LANG' | 'MATH';
@@ -57,6 +57,8 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exercises'] && this.exercises) {
+      this.needsTypeset = true;                  // marcar que hay que re-renderizar
+      this.cdr.markForCheck();
       this.exercises.forEach((m) => {
         if (Array.isArray(m.options)) {
           m.options = m.options.map((o: string) =>
@@ -75,6 +77,22 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit {
     }
     this.updateMathJax();
   }
+
+  trackById(_: number, ex: any) {
+    return ex.id ?? _;
+  }
+
+  toggleMostrar() {
+    this.mostrarMatematicas = !this.mostrarMatematicas;
+    if (this.mostrarMatematicas) {
+      
+      setTimeout(() => {
+        this.needsTypeset = true;
+        this.cdr.markForCheck();
+      }, 0);
+    }
+  }
+
 
   ngAfterViewInit() {
     this.questionElements.forEach((el, i) => {
