@@ -143,7 +143,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit, After
 
     this.mainService.verifyExercise({
       course: this.course,
-      subject: this.subject,
+      subject: "MATH",
       mood: this.mood,
       exercise: { ...exercise, userAnswer: resolvedAnswer }
     }).pipe(retry(3)).subscribe({

@@ -102,7 +102,7 @@ export class LanguageComponent implements OnChanges {
 
     this.mainService.verifyExercise({
       course: this.course,
-      subject: this.subject,
+      subject: "LANG",
       mood: this.mood,
       exercise: { ...exercise, userAnswer }
     }).subscribe({
