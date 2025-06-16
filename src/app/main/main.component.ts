@@ -302,14 +302,8 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
       }
 
       this.socketService.setUserMessageSubject(this._userService.message);
-      this.socketService.connect("wss://soc-api-educacion.csff.cl");
 
-      this.socketService.getWebsocketID(this.formData.user_id)
 
-      this.socketService.connectadConfirmed$.subscribe((estado) => {
-        this.isLoggedInWS = estado === 'conectado';
-        console.log("WebSocket:", estado);
-      });
 
       this._userService.message.subscribe({
         next: (res: any) => {
@@ -344,6 +338,13 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
           }
         }
 
+      });
+      
+      this.socketService.connect("wss://soc-api-educacion.csff.cl");
+
+      this.socketService.connectadConfirmed$.subscribe((estado) => {
+        this.isLoggedInWS = estado === 'conectado';
+        console.log("WebSocket:", estado);
       });
 
       this.isLoggedInWS = await this.socketService.startWSConnection();

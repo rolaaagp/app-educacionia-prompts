@@ -37,6 +37,8 @@ export class SocketService {
 
     ws.onopen = () => {
       this.conectadoState.next('conectado');
+      const user = JSON.parse(localStorage.getItem("userEDUCACIONIA")!);
+      this.getWebsocketID(user.user_id);
     };
 
     const observer = {
