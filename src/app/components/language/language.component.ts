@@ -6,20 +6,6 @@ import { MainService } from '../../../services/main.services';
 import { SkeletonComponent } from "../skeleton/skeleton.component";
 import { Exercise } from '../../main/main.component';
 
-
-type Paso = {
-  explicacion: string;
-  visual_matematica: string;
-  en_que_debo_mejorar: string;
-};
-
-type Evaluacion = {
-  correcta: boolean;
-  frase_motivacional: string;
-  pasos: Paso[];
-};
-
-
 @Component({
   selector: 'app-language',
   imports: [CommonModule, FormsModule, SkeletonComponent],

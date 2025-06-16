@@ -331,7 +331,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
               this.cdr.detectChanges();
             }
 
-            if (payload.action == "getSupportMaterialsResponse") {
+            if (payload.action == "getSupportMaterialsResponse" && typeof payload.data == "string") {
               const data = payload.data;
               console.log("Data getSupportMaterialsResponse", data)
               this.formatearMaterialApoyo(data);
@@ -358,7 +358,8 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
 
 
   private formatearMaterialApoyo(rawMarkdown: string) {
-    const rawHtml = marked.parse(rawMarkdown);
+    const preprocesado = rawMarkdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const rawHtml = marked.parse(preprocesado);
     const htmlWithKatex = replaceLatex1(rawHtml as string);
     this.materialApoyo = this.sanitizerDom.bypassSecurityTrustHtml(htmlWithKatex);
     this.cdr.detectChanges();
@@ -468,59 +469,6 @@ Textos periodísticos y mediáticos.`
 
   }
 
-  solicitarPorChunks() {
-    this.loading = true;
-    const total = this.formData.quantity_exercise;
-    const chunkSize = 1;
-    const chunks = Math.ceil(total / chunkSize);
-    const contents = this.formData.contents.toLowerCase();
-
-    const requests = Array.from({ length: chunks }, (_, i) => {
-      const cantidad = i === chunks - 1 ? total - chunkSize * i : chunkSize;
-      const payload = { ...this.formData, contents, quantity_exercise: cantidad };
-      return this.mainService.generateExercises(payload).pipe(
-        retry(3),
-        catchError((err) => {
-          console.error('Error en chunk', i, err);
-          return of({ data: [] });
-        })
-      );
-    });
-
-    forkJoin(requests).subscribe({
-      next: (responses) => {
-        const all = responses.flatMap((res) => {
-          let rawData = res.data;
-          if (rawData?.rawData && typeof rawData.rawData === 'string') {
-            try {
-              rawData = JSON.parse(rawData.rawData);
-            } catch {
-              rawData = [];
-            }
-          }
-          return Array.isArray(rawData)
-            ? rawData
-            : this.extractExercisesFromText(rawData?.toString() || '');
-        });
-
-        const limited = all.slice(0, total);
-
-        if (this.formData.subject === "LANG") {
-          this.excLANG = limited;
-        } else {
-          this.excMATH = limited;
-        }
-      },
-      error: (err) => {
-        console.error("Error final al generar ejercicios:", err);
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
-  }
-
   format(limited: Exercise[]) {
     if (limited && limited.length > 0) {
       for (const x of limited) {
@@ -579,47 +527,5 @@ Textos periodísticos y mediáticos.`
     this.pdfExport.saveAs(`material_apoyo_${this.formData.subject}.pdf`);
 
   }
-
-
-  async exportarPDF1(): Promise<void> {
-    if (!this.isBrowser) return;
-
-    const container = document.getElementById('materialApoyo');
-    if (!container) {
-      console.warn('No se encontró #materialApoyo');
-      return;
-    }
-
-    // 1. Asegurarse de que MathJax haya rendereado todas las fórmulas
-    if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
-      await MathJax.typesetPromise();
-    }
-
-    // 2. Importar jsPDF en caliente
-    const [{ default: jsPDF }] = await Promise.all([
-      import('jspdf')
-    ]);
-
-    // 3. Crear el documento
-    const pdf = new jsPDF({
-      unit: 'pt',
-      orientation: 'p'
-    });
-
-    // 4. Renderizar el HTML como vectores/texto
-    await pdf.html(container, {
-      x: 40,  // margen izquierdo
-      y: 40,  // margen superior
-      width: pdf.internal.pageSize.getWidth() - 80,
-      windowWidth: document.body.scrollWidth,
-      callback: () => {
-        // 5. Una vez terminado, guardar el PDF
-        pdf.save('Material_de_Apoyo.pdf');
-      }
-    });
-  }
-
-
-
 
 }

@@ -6,7 +6,7 @@
 
 .option-item {
   display: flex;
-  align-items: baseline; /* << clave para alinear con fracciones */
+  align-items: baseline;
   gap: 8px;
   margin-bottom: 4px;
 }
@@ -21,12 +21,19 @@
 
 .option-content .katex {
   display: inline;
-  vertical-align: middle; /* << fuerza alineación */
+  vertical-align: middle;
   font-size: 1rem;
 }
 
-/* estilos básicos para markdown */
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('/src/assets/fonts/Roboto-Regular.ttf') format('truetype');
+}
 
+
+.markdown-body {
+ font-family: 'Roboto-Regular', sans-serif !important; 
+}
 .markdown-body {
   line-height: 1.8;
 }
