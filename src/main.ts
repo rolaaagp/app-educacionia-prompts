@@ -4,7 +4,7 @@ import { defineFont } from '@progress/kendo-drawing/pdf';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
-import { environment } from './app/environments/environment';
+import { environment } from './environments/environment';
 import { enableProdMode } from '@angular/core';
 
 
