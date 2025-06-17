@@ -20,6 +20,11 @@ import { MathComponent } from '../components/math/math.component';
 import { SkeletonComponent } from '../components/skeleton/skeleton.component';
 import { replaceLatex1 } from '../shared/latex-utils';
 
+
+import '@progress/kendo-drawing';
+
+declare const kendo: any;
+
 export type Exercise = {
   id: number;
   type: "open_ended" | "multiple_choice";
@@ -97,6 +102,40 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
 
   ngAfterViewInit() {
     if (this.isBrowser) this.updateMathJax();
+
+
+    kendo.pdf.defineFont({
+      "Nunito Sans": {
+        normal: "assets/fonts/Nunito-Regular.ttf",
+        bold: "assets/fonts/Nunito-Bold.ttf",
+        italic: "assets/fonts/Nunito-Italic.ttf",
+        bolditalic: "assets/fonts/Nunito-BoldItalic.ttf"
+      },
+      "Nunito Sans Light": {
+        normal: "assets/fonts/Nunito-Light.ttf",
+        italic: "assets/fonts/Nunito-LightItalic.ttf"
+      },
+      "Nunito Sans ExtraLight": {
+        normal: "assets/fonts/Nunito-ExtraLight.ttf",
+        italic: "assets/fonts/Nunito-ExtraLightItalic.ttf"
+      },
+      "Nunito Sans Medium": {
+        normal: "assets/fonts/Nunito-Medium.ttf",
+        italic: "assets/fonts/Nunito-MediumItalic.ttf"
+      },
+      "Nunito Sans SemiBold": {
+        normal: "assets/fonts/Nunito-SemiBold.ttf",
+        italic: "assets/fonts/Nunito-SemiBoldItalic.ttf"
+      },
+      "Nunito Sans ExtraBold": {
+        normal: "assets/fonts/Nunito-ExtraBold.ttf",
+        italic: "assets/fonts/Nunito-ExtraBoldItalic.ttf"
+      },
+      "Nunito Sans Black": {
+        normal: "assets/fonts/Nunito-Black.ttf",
+        italic: "assets/fonts/Nunito-BlackItalic.ttf"
+      }
+    });
   }
 
   ngAfterViewChecked() {
@@ -357,11 +396,16 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
   }
 
 
+  private acumulado: string = "";
+
   private formatearMaterialApoyo(rawMarkdown: string) {
     const preprocesado = rawMarkdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     const rawHtml = marked.parse(preprocesado);
     const htmlWithKatex = replaceLatex1(rawHtml as string);
-    this.materialApoyo = this.sanitizerDom.bypassSecurityTrustHtml(htmlWithKatex);
+
+    this.acumulado += htmlWithKatex;
+    this.materialApoyo = this.sanitizerDom.bypassSecurityTrustHtml(this.acumulado);
+
     this.cdr.detectChanges();
   }
 
