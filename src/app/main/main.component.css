@@ -29,16 +29,13 @@
   font-weight: bold;
 }
 
-.markdown-body {
-  line-height: 1.6;
-}
 
 .markdown-body {
   margin-left: 24px;
-  line-height: 1.6;
   text-align: justify;
   margin-top: 8px;
   margin-bottom: 16px;
+  background-color: #fff;
 }
 
 .markdown-body h1,

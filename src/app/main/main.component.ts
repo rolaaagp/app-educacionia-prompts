@@ -22,8 +22,7 @@ import { replaceLatex1 } from '../shared/latex-utils';
 
 
 import '@progress/kendo-drawing';
-
-declare const kendo: any;
+import { drawDOM, exportImage } from '@progress/kendo-drawing';
 
 export type Exercise = {
   id: number;
@@ -36,7 +35,7 @@ export type Exercise = {
 
 
 declare const MathJax: any;
-
+declare const kendo: any;
 
 @Component({
   selector: 'app-main',
@@ -104,7 +103,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
     if (this.isBrowser) this.updateMathJax();
 
 
-    kendo.pdf.defineFont({
+    kendo?.pdf.defineFont({
       "Nunito Sans": {
         normal: "assets/fonts/Nunito-Regular.ttf",
         bold: "assets/fonts/Nunito-Bold.ttf",
@@ -337,7 +336,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
     if (this.isBrowser) {
 
 
-      this.formatearMaterialApoyo("<div style=\"margin: 0 1cm;\">\n\n<style>\n  /* Margen vertical de 24 pt entre párrafos */\n  p { margin: 24pt 0; }\n</style>\n\n# MATERIAL DE APOYO\n\n<p><strong>Temas:</strong><br/>\nFunciones, ecuaciones, proporcionalidad, geometría y probabilidades.</p>\n\n## Preguntas:\n\n1. **Descubriendo patrones en funciones lineales**  \n   <p>Contextualización: Las funciones lineales están en todas partes, desde calcular el costo de una llamada telefónica hasta predecir el crecimiento de una población. Entenderlas te ayudará a analizar situaciones cotidianas.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Identifica dos puntos en la función.<br/>\n       2. Calcula la pendiente usando la fórmula [math]m = \\frac{y_2 - y_1}{x_2 - x_1}[/math].<br/>\n       3. Usa un punto y la pendiente para escribir la ecuación [math]y = mx + b[/math].  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Dibuja la línea para visualizar mejor la relación entre las variables. Recuerda, cada punto en esa línea tiene una historia que contar.</p>\n\n2. **Resolviendo ecuaciones cuadráticas con factorización**  \n   <p>Contextualización: Las ecuaciones cuadráticas aparecen en problemas de física, como el movimiento de proyectiles, o en economía, al calcular puntos de equilibrio. Dominarlas te abrirá puertas en muchas áreas.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Escribe la ecuación en la forma [math]ax^2 + bx + c = 0[/math].<br/>\n       2. Factoriza la expresión cuadrática.<br/>\n       3. Aplica la propiedad del producto cero para encontrar las soluciones.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Practica la factorización con diferentes tipos de expresiones. Es como armar un rompecabezas: al principio puede parecer difícil, pero con práctica, verás patrones y se volverá más fácil.</p>\n\n3. **Aplicando proporcionalidad en recetas de cocina**  \n   <p>Contextualización: La proporcionalidad es crucial en la cocina. Saber ajustar las cantidades de una receta te permitirá cocinar para diferentes números de personas sin perder el sabor original.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Identifica la razón entre la cantidad original y la nueva cantidad deseada.<br/>\n       2. Multiplica cada ingrediente por esta razón.<br/>\n       3. Redondea los resultados a unidades prácticas de medida.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Usa esta habilidad en tu vida diaria. Podrías sorprenderte al ver cuántas situaciones cotidianas involucran proporciones.</p>\n\n4. **Calculando áreas de figuras compuestas**  \n   <p>Contextualización: En arquitectura y diseño, a menudo se trabaja con formas complejas. Saber calcular áreas de figuras compuestas te ayudará a entender mejor los espacios y a planificar proyectos.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Divide la figura compuesta en formas geométricas básicas.<br/>\n       2. Calcula el área de cada forma individual.<br/>\n       3. Suma las áreas individuales para obtener el área total.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Practica descomponiendo objetos cotidianos en formas básicas. Este ejercicio mental mejorará tu percepción espacial y tu creatividad.</p>\n\n5. **Analizando probabilidades en juegos de azar**  \n   <p>Contextualización: Entender las probabilidades te ayuda a tomar decisiones informadas, ya sea en juegos de azar o en situaciones de la vida real donde hay incertidumbre.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Identifica todos los resultados posibles.<br/>\n       2. Cuenta los resultados favorables.<br/>\n       3. Divide los resultados favorables entre el total de resultados posibles.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Recuerda que en la vida real, las probabilidades no siempre garantizan un resultado. Úsalas como una herramienta para tomar decisiones, pero siempre considera otros factores.</p>\n\n</div>");
+      // this.formatearMaterialApoyo("<div style=\"margin: 0 1cm;\">\n\n<style>\n  /* Margen vertical de 24 pt entre párrafos */\n  p { margin: 24pt 0; }\n</style>\n\n# MATERIAL DE APOYO\n\n<p><strong>Temas:</strong><br/>\nFunciones, ecuaciones, proporcionalidad, geometría y probabilidades.</p>\n\n## Preguntas:\n\n1. **Descubriendo patrones en funciones lineales**  \n   <p>Contextualización: Las funciones lineales están en todas partes, desde calcular el costo de una llamada telefónica hasta predecir el crecimiento de una población. Entenderlas te ayudará a analizar situaciones cotidianas.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Identifica dos puntos en la función.<br/>\n       2. Calcula la pendiente usando la fórmula [math]m = \\frac{y_2 - y_1}{x_2 - x_1}[/math].<br/>\n       3. Usa un punto y la pendiente para escribir la ecuación [math]y = mx + b[/math].  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Dibuja la línea para visualizar mejor la relación entre las variables. Recuerda, cada punto en esa línea tiene una historia que contar.</p>\n\n2. **Resolviendo ecuaciones cuadráticas con factorización**  \n   <p>Contextualización: Las ecuaciones cuadráticas aparecen en problemas de física, como el movimiento de proyectiles, o en economía, al calcular puntos de equilibrio. Dominarlas te abrirá puertas en muchas áreas.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Escribe la ecuación en la forma [math]ax^2 + bx + c = 0[/math].<br/>\n       2. Factoriza la expresión cuadrática.<br/>\n       3. Aplica la propiedad del producto cero para encontrar las soluciones.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Practica la factorización con diferentes tipos de expresiones. Es como armar un rompecabezas: al principio puede parecer difícil, pero con práctica, verás patrones y se volverá más fácil.</p>\n\n3. **Aplicando proporcionalidad en recetas de cocina**  \n   <p>Contextualización: La proporcionalidad es crucial en la cocina. Saber ajustar las cantidades de una receta te permitirá cocinar para diferentes números de personas sin perder el sabor original.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Identifica la razón entre la cantidad original y la nueva cantidad deseada.<br/>\n       2. Multiplica cada ingrediente por esta razón.<br/>\n       3. Redondea los resultados a unidades prácticas de medida.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Usa esta habilidad en tu vida diaria. Podrías sorprenderte al ver cuántas situaciones cotidianas involucran proporciones.</p>\n\n4. **Calculando áreas de figuras compuestas**  \n   <p>Contextualización: En arquitectura y diseño, a menudo se trabaja con formas complejas. Saber calcular áreas de figuras compuestas te ayudará a entender mejor los espacios y a planificar proyectos.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Divide la figura compuesta en formas geométricas básicas.<br/>\n       2. Calcula el área de cada forma individual.<br/>\n       3. Suma las áreas individuales para obtener el área total.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Practica descomponiendo objetos cotidianos en formas básicas. Este ejercicio mental mejorará tu percepción espacial y tu creatividad.</p>\n\n5. **Analizando probabilidades en juegos de azar**  \n   <p>Contextualización: Entender las probabilidades te ayuda a tomar decisiones informadas, ya sea en juegos de azar o en situaciones de la vida real donde hay incertidumbre.</p>\n\n   **Desarrollo paso a paso:**\n\n   <p>\n       1. Identifica todos los resultados posibles.<br/>\n       2. Cuenta los resultados favorables.<br/>\n       3. Divide los resultados favorables entre el total de resultados posibles.  \n   </p>\n\n   <p><strong>Consejo:</strong><br/>\n   Recuerda que en la vida real, las probabilidades no siempre garantizan un resultado. Úsalas como una herramienta para tomar decisiones, pero siempre considera otros factores.</p>\n\n</div>");
       this.updateMathJax();
       const user = JSON.parse(localStorage.getItem("userEDUCACIONIA") as string) as GetUserByEmailResponse["data"];
       if (user) {
@@ -571,5 +570,21 @@ Textos periodísticos y mediáticos.`
     this.pdfExport.saveAs(`material_apoyo_${this.formData.subject}.pdf`);
 
   }
+
+  exportarPNG(): void {
+  const element = document.querySelector('.materialApoyo') as HTMLElement;
+  drawDOM(element, {
+    paperSize: 'auto',
+    scale: 1,
+  })
+  .then(group => exportImage(group, {
+  }))
+  .then(dataUri => {
+    const link = document.createElement('a');
+    link.href = dataUri;
+    link.download = `material_apoyo_${this.formData.subject}.jpg`;
+    link.click();
+  });
+}
 
 }

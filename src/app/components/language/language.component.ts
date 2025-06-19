@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FormsModule } from '@angular/forms';
 import { MainService } from '../../../services/main.services';
@@ -20,7 +20,7 @@ import { Exercise } from '../../main/main.component';
   templateUrl: './language.component.html',
   styleUrl: './language.component.css'
 })
-export class LanguageComponent implements OnChanges {
+export class LanguageComponent implements OnChanges, OnInit {
   @Input() exercises!: Exercise[];
   @Input() course!: '1M' | '2M' | '3M' | '4M';
   @Input() subject!: 'LANG' | 'MATH';
@@ -35,6 +35,17 @@ export class LanguageComponent implements OnChanges {
 
   userResponses: (string | number)[] = [];
   respuestasCorrectas: (boolean | null)[] = [];
+
+
+  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+
+  isDesktop = false;
+  videoStream: MediaStream | null = null;
+  capturedImageBase64: string | null = null;
+
+  ngOnInit(): void {
+     this.isDesktop = !/Mobi|Android/i.test(navigator.userAgent);
+  }
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,10 +97,12 @@ export class LanguageComponent implements OnChanges {
       ? exercise.options[rawResponse]
       : rawResponse;
 
+    // keyS3 = foto del archivo subido
     this.mainService.verifyExercise({
       course: this.course,
       subject: "LANG",
       mood: this.mood,
+      // keyS3: "",
       exercise: { ...exercise, userAnswer }
     }).subscribe({
       next: (res) => {
@@ -99,5 +112,39 @@ export class LanguageComponent implements OnChanges {
         this.loading[index] = false;
       }
     });
+  }
+
+    async startCamera() {
+    this.videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const video = this.videoElement.nativeElement;
+    video.srcObject = this.videoStream;
+    await video.play();
+  }
+
+  capturePhoto() {
+    const video = this.videoElement.nativeElement;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d')!.drawImage(video, 0, 0);
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    this.capturedImageBase64 = dataUrl.split(',')[1];
+    this.stopCamera();
+  }
+
+  stopCamera() {
+    this.videoStream?.getTracks().forEach(t => t.stop());
+    this.videoStream = null;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.capturedImageBase64 = (reader.result as string).split(',')[1];
+    };
+    reader.readAsDataURL(file);
   }
 }

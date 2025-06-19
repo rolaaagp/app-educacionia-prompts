@@ -19,6 +19,7 @@ export interface IBodyVerify {
   course: '1M' | '2M' | '3M' | '4M';
   subject: 'LANG' | 'MATH';
   mood: "motivado" | "desanimado" | "neutro";
+  keyS3?: string;
 }
 
 @Injectable({

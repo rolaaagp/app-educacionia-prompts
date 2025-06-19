@@ -85,7 +85,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit, After
   toggleMostrar() {
     this.mostrarMatematicas = !this.mostrarMatematicas;
     if (this.mostrarMatematicas) {
-      
+
       setTimeout(() => {
         this.needsTypeset = true;
         this.cdr.markForCheck();
@@ -140,15 +140,32 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit, After
     const resolvedAnswer = exercise.options && typeof response === 'number'
       ? exercise.options[response]
       : response;
+    // imagen-prueba-latex2.png
+    // imagen-prueba-latex.png
+    // cuadratica.png
+    // no-es-ejercicio.jpg
 
     this.mainService.verifyExercise({
       course: this.course,
       subject: "MATH",
       mood: this.mood,
+      keyS3: "student_exercises/cuadratica.png",
       exercise: { ...exercise, userAnswer: resolvedAnswer }
-    }).pipe(retry(3)).subscribe({
+    }).subscribe({
       next: (res) => {
+
+        if (res.data.canContinue === false) {
+          this.loading[index] = false;
+          this.IAresponse[index] = ["<p>La respuesta no es valida - no posee un formato valido o no contiene un ejercicio.</p>"];
+          this.visibleResponse[index] = [];
+          this.cdr.detectChanges();
+          this.revealResponse(index);
+          this.needsTypeset = true;
+          return;
+        }
+
         const render = this.renderEvaluacion(res.data);
+
         this.IAresponse[index] = render;
         this.visibleResponse[index] = [];
 
