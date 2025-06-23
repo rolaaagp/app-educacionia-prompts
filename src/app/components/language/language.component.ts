@@ -102,7 +102,7 @@ export class LanguageComponent implements OnChanges, OnInit {
       course: this.course,
       subject: "LANG",
       mood: this.mood,
-      // keyS3: "",
+      img: this.capturedImageBase64 ?? '',
       exercise: { ...exercise, userAnswer }
     }).subscribe({
       next: (res) => {

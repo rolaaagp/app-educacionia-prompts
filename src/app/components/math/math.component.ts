@@ -149,7 +149,7 @@ export class MathComponent implements AfterViewChecked, OnChanges, OnInit, After
       course: this.course,
       subject: "MATH",
       mood: this.mood,
-      keyS3: "student_exercises/cuadratica.png",
+      img: "student_exercises/cuadratica.png",
       exercise: { ...exercise, userAnswer: resolvedAnswer }
     }).subscribe({
       next: (res) => {
