@@ -103,38 +103,38 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
     if (this.isBrowser) this.updateMathJax();
 
 
-    kendo?.pdf.defineFont({
-      "Nunito Sans": {
-        normal: "assets/fonts/Nunito-Regular.ttf",
-        bold: "assets/fonts/Nunito-Bold.ttf",
-        italic: "assets/fonts/Nunito-Italic.ttf",
-        bolditalic: "assets/fonts/Nunito-BoldItalic.ttf"
-      },
-      "Nunito Sans Light": {
-        normal: "assets/fonts/Nunito-Light.ttf",
-        italic: "assets/fonts/Nunito-LightItalic.ttf"
-      },
-      "Nunito Sans ExtraLight": {
-        normal: "assets/fonts/Nunito-ExtraLight.ttf",
-        italic: "assets/fonts/Nunito-ExtraLightItalic.ttf"
-      },
-      "Nunito Sans Medium": {
-        normal: "assets/fonts/Nunito-Medium.ttf",
-        italic: "assets/fonts/Nunito-MediumItalic.ttf"
-      },
-      "Nunito Sans SemiBold": {
-        normal: "assets/fonts/Nunito-SemiBold.ttf",
-        italic: "assets/fonts/Nunito-SemiBoldItalic.ttf"
-      },
-      "Nunito Sans ExtraBold": {
-        normal: "assets/fonts/Nunito-ExtraBold.ttf",
-        italic: "assets/fonts/Nunito-ExtraBoldItalic.ttf"
-      },
-      "Nunito Sans Black": {
-        normal: "assets/fonts/Nunito-Black.ttf",
-        italic: "assets/fonts/Nunito-BlackItalic.ttf"
-      }
-    });
+    // kendo?.pdf.defineFont({
+    //   "Nunito Sans": {
+    //     normal: "assets/fonts/Nunito-Regular.ttf",
+    //     bold: "assets/fonts/Nunito-Bold.ttf",
+    //     italic: "assets/fonts/Nunito-Italic.ttf",
+    //     bolditalic: "assets/fonts/Nunito-BoldItalic.ttf"
+    //   },
+    //   "Nunito Sans Light": {
+    //     normal: "assets/fonts/Nunito-Light.ttf",
+    //     italic: "assets/fonts/Nunito-LightItalic.ttf"
+    //   },
+    //   "Nunito Sans ExtraLight": {
+    //     normal: "assets/fonts/Nunito-ExtraLight.ttf",
+    //     italic: "assets/fonts/Nunito-ExtraLightItalic.ttf"
+    //   },
+    //   "Nunito Sans Medium": {
+    //     normal: "assets/fonts/Nunito-Medium.ttf",
+    //     italic: "assets/fonts/Nunito-MediumItalic.ttf"
+    //   },
+    //   "Nunito Sans SemiBold": {
+    //     normal: "assets/fonts/Nunito-SemiBold.ttf",
+    //     italic: "assets/fonts/Nunito-SemiBoldItalic.ttf"
+    //   },
+    //   "Nunito Sans ExtraBold": {
+    //     normal: "assets/fonts/Nunito-ExtraBold.ttf",
+    //     italic: "assets/fonts/Nunito-ExtraBoldItalic.ttf"
+    //   },
+    //   "Nunito Sans Black": {
+    //     normal: "assets/fonts/Nunito-Black.ttf",
+    //     italic: "assets/fonts/Nunito-BlackItalic.ttf"
+    //   }
+    // });
   }
 
   ngAfterViewChecked() {
@@ -383,7 +383,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnChanges, AfterVie
 
       });
 
-      this.socketService.connect("wss://soc-api-educacion.csff.cl");
+      this.socketService.connect("wss://soc-api-educacion.nexia.cl");
 
       this.socketService.connectadConfirmed$.subscribe((estado) => {
         this.isLoggedInWS = estado === 'conectado';

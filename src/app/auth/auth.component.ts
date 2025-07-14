@@ -13,8 +13,8 @@ import { UserContextService } from '../context/user.context';
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent {
-  username = '';
-  password = '';
+  username = 'rgarcia@nexia.cl';
+  password = '123';
   errorMessage = '';
 
   constructor(

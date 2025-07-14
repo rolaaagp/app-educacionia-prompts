@@ -30,8 +30,8 @@ export class UserService {
   public message: Subject<any>;
   public conexion: Subject<any>;
 
-  private readonly SOC_DOMAIN = "wss://soc-api-educacion.csff.cl/websocket";
-  private readonly DOMAIN = "https://api-educacion.csff.cl";
+  private readonly SOC_DOMAIN = "wss://soc-api-educacion.nexia.cl/websocket";
+  private readonly DOMAIN = "https://api-educacion.nexia.cl";
 
   constructor(private readonly http: HttpClient, private readonly _socketService: SocketService) {
     this.message = _socketService.connect(this.SOC_DOMAIN);

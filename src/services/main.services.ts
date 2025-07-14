@@ -27,7 +27,7 @@ export interface IBodyVerify {
 })
 export class MainService {
 
-  private readonly DOMAIN = "https://api-educacion.csff.cl";
+  private readonly DOMAIN = "https://api-educacion.nexia.cl";
 
   constructor(private http: HttpClient) { }
 
